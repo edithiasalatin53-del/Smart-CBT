@@ -6,7 +6,7 @@
 <title>SmartCBT Pro - Cloud</title>
 <script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">    
 <style>
 *{font-family:'Plus Jakarta Sans',sans-serif;box-sizing:border-box;margin:0}html,body{height:100%;overflow:hidden}
 .glass{background:rgba(255,255,255,.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1)}
@@ -34,6 +34,9 @@ input,select,textarea{color:#fff}select option{background:#1a1a3e;color:#fff}
 .img-preview-box{display:inline-block;position:relative;margin-top:4px}
 .img-preview-box img{max-height:64px;border-radius:8px;border:1px solid rgba(255,255,255,.1)}
 .img-preview-box .img-del{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#ef4444;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1;border:2px solid #0a0a1a}
+body.exam-active,body.exam-active *{-webkit-user-select:none!important;-moz-user-select:none!important;-ms-user-select:none!important;user-select:none!important}
+body.exam-active textarea,body.exam-active input[type="text"]{user-select:text!important;-webkit-user-select:text!important;-moz-user-select:text!important}
+body.exam-active img{-webkit-user-drag:none!important;pointer-events:auto}
 </style>
 </head>
 <body class="h-full gb text-white overflow-hidden">
@@ -46,7 +49,7 @@ input,select,textarea{color:#fff}select option{background:#1a1a3e;color:#fff}
 </div>
 <div id="ml" class="fixed inset-0 z-[100] hidden items-center justify-center mo"><div class="gs rounded-2xl p-8 w-full max-w-md mx-4 relative asu"><button onclick="hiM('ml')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button><div class="text-center mb-6"><div class="w-14 h-14 rounded-xl bp flex items-center justify-center mx-auto mb-4"><i data-lucide="graduation-cap" class="w-7 h-7"></i></div><h3 class="text-xl font-bold">Masuk</h3></div><div class="flex gap-2 mb-6 bg-white/5 rounded-xl p-1" id="rt"></div><form onsubmit="return AU.login(event)"><label class="text-sm text-gray-300 block mb-1">Username</label><input id="iu" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 mb-4 text-sm focus:outline-none focus:border-purple-500" required><label class="text-sm text-gray-300 block mb-1">Password</label><input id="ip" type="password" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 mb-4 text-sm focus:outline-none focus:border-purple-500" required><div id="le" class="hidden mb-4 bg-red-500/20 text-red-300 text-sm rounded-xl p-3 text-center"></div><button type="submit" id="lb" class="w-full bp py-3 rounded-xl font-semibold">Masuk</button></form></div></div>
 <div id="sd" class="hidden flex-1 flex overflow-hidden"><div class="dov" onclick="tSB()"></div><aside class="ds w-64 gs border-r border-white/10 flex flex-col shrink-0 overflow-y-auto"><div class="p-6 flex items-center gap-3 border-b border-white/5"><div class="w-9 h-9 rounded-lg bp flex items-center justify-center"><i data-lucide="graduation-cap" class="w-4 h-4"></i></div><span class="font-bold text-sm">SmartCBT Pro</span></div><nav id="sn" class="flex-1 p-4 space-y-1"></nav><div class="p-4 border-t border-white/5"><button onclick="AU.out()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-red-500/10"><i data-lucide="log-out" class="w-4 h-4"></i>Keluar</button></div></aside><main class="flex-1 overflow-y-auto"><div class="p-6 lg:p-8"><div class="flex items-center justify-between mb-8"><div class="flex items-center gap-3"><button onclick="tSB()" class="md:hidden glass p-2 rounded-lg"><i data-lucide="menu" class="w-5 h-5"></i></button><div><h1 id="dt" class="text-2xl font-bold"></h1><p id="ds" class="text-sm text-gray-400 mt-1"></p></div></div><div class="glass rounded-xl px-4 py-2 flex items-center gap-2 text-sm"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span><span id="ud" class="text-gray-300"></span></div></div><div id="dc"></div></div></main></div>
-<div id="se" class="hidden flex-1 flex flex-col overflow-hidden"><header class="gs border-b border-white/10 px-6 py-3 flex items-center justify-between shrink-0"><div class="flex items-center gap-4"><i data-lucide="file-text" class="w-5 h-5 text-purple-400"></i><span class="font-semibold text-sm" id="et"></span><span class="text-xs text-gray-400" id="ei"></span></div><button onclick="EX.tgSB()" class="hidden lg:flex glass px-3 py-1.5 rounded-lg items-center gap-2 text-sm hover:bg-white/10 transition" title="Toggle Navigasi"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/></svg></button><div class="flex items-center gap-2 bg-red-500/20 px-3 py-1.5 rounded-lg"><i data-lucide="clock" class="w-4 h-4 text-red-400"></i><span id="etm" class="text-sm font-mono font-bold text-red-300">00:00:00</span></div></header><div class="flex-1 flex overflow-hidden"><div class="flex-1 overflow-y-auto p-6 lg:p-8"><div id="eq"></div></div><aside id="exam_sb" class="es w-56 gs border-l border-white/10 p-4 overflow-y-auto shrink-0 transition-all duration-300"><h3 class="text-sm font-semibold mb-3">Navigasi</h3><div id="en" class="grid grid-cols-5 gap-2 mb-6"></div><div class="space-y-2 text-xs"><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-purple-500"></div><span class="text-gray-400">Dijawab</span></div><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-yellow-500"></div><span class="text-gray-400">Ragu</span></div><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-white/10"></div><span class="text-gray-400">Belum</span></div></div><button onclick="EX.cf()" class="w-full mt-6 bg-green-600 hover:bg-green-700 px-4 py-3 rounded-xl text-sm font-semibold transition">Selesai & Kirim</button></aside></div><div class="md:hidden gs border-t border-white/10 px-4 py-3 flex items-center justify-between shrink-0"><button onclick="EX.pr()" class="glass px-4 py-2 rounded-lg text-sm">&larr;</button><span class="text-sm text-gray-400" id="emb"></span><button onclick="EX.nx()" class="bp px-4 py-2 rounded-lg text-sm">&rarr;</button></div></div>
+<div id="se" class="hidden flex-1 flex flex-col overflow-hidden"><header class="gs border-b border-white/10 px-6 py-3 flex items-center justify-between shrink-0"><div class="flex items-center gap-4"><i data-lucide="file-text" class="w-5 h-5 text-purple-400"></i><span class="font-semibold text-sm" id="et"></span><span class="text-xs text-gray-400" id="ei"></span></div><button onclick="EX.tgSB()" class="hidden lg:flex glass px-3 py-1.5 rounded-lg items-center gap-2 text-sm hover:bg-white/10 transition" title="Toggle Navigasi"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/></svg></button><div class="flex items-center gap-2 bg-red-500/20 px-3 py-1.5 rounded-lg"><i data-lucide="shield-alert" class="w-3.5 h-3.5 text-red-400"></i><span class="text-xs text-red-300 hidden lg:inline">Dilarang screenshot &amp; pindah tab</span><span id="etm" class="text-sm font-mono font-bold text-red-300">00:00:00</span></header><div class="flex-1 flex overflow-hidden"><div class="flex-1 overflow-y-auto p-6 lg:p-8"><div id="eq"></div></div><aside id="exam_sb" class="es w-56 gs border-l border-white/10 p-4 overflow-y-auto shrink-0 transition-all duration-300"><h3 class="text-sm font-semibold mb-3">Navigasi</h3><div id="en" class="grid grid-cols-5 gap-2 mb-6"></div><div class="space-y-2 text-xs"><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-purple-500"></div><span class="text-gray-400">Dijawab</span></div><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-yellow-500"></div><span class="text-gray-400">Ragu</span></div><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-white/10"></div><span class="text-gray-400">Belum</span></div></div><button onclick="EX.cf()" class="w-full mt-6 bg-green-600 hover:bg-green-700 px-4 py-3 rounded-xl text-sm font-semibold transition">Selesai & Kirim</button></aside></div><div class="md:hidden gs border-t border-white/10 px-4 py-3 flex items-center justify-between shrink-0"><button onclick="EX.pr()" class="glass px-4 py-2 rounded-lg text-sm">&larr;</button><span class="text-sm text-gray-400" id="emb"></span><button onclick="EX.nx()" class="bp px-4 py-2 rounded-lg text-sm">&rarr;</button></div></div>
 <div id="mg" class="fixed inset-0 z-[110] hidden items-center justify-center mo"><div class="gs rounded-2xl p-6 w-full max-w-lg mx-4 relative asu max-h-[90vh] overflow-y-auto"><button onclick="hiM('mg')" class="absolute top-4 right-4 text-gray-400 hover:text-white z-10"><i data-lucide="x" class="w-5 h-5"></i></button><div id="mb"></div></div></div>
 <div id="mt" class="fixed inset-0 z-[100] hidden items-center justify-center mo"><div class="gs rounded-2xl p-8 w-full max-w-md mx-4 relative asu"><h3 class="text-xl font-bold mb-2 text-center">Masuk Ujian</h3><p class="text-sm text-gray-400 text-center mb-6">Masukkan token dari guru</p><input type="hidden" id="itk_id" value=""><input id="itk" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 mb-2 text-sm text-center font-mono text-lg tracking-widest uppercase" placeholder="XXXXXXXX" maxlength="8"><p class="text-xs text-gray-400 text-center mb-4" id="itk_name"></p><div id="te" class="hidden mb-4 bg-red-500/20 text-red-300 text-sm rounded-xl p-3 text-center"></div><button onclick="EX.etk()" id="btk" class="w-full bp py-3 rounded-xl font-semibold">Mulai</button><button onclick="hiM('mt')" class="w-full mt-3 glass py-3 rounded-xl text-sm text-gray-400 hover:text-white transition">Batal</button></div></div>
 <div id="po" class="fixed inset-0 z-[150] hidden bg-black/95 flex items-center justify-center"><div class="text-center"><i data-lucide="shield-alert" class="w-16 h-16 text-red-400 mx-auto mb-4"></i><h2 class="text-2xl font-bold text-red-400 mb-2">DIJEDA</h2><p class="text-gray-400 mb-4" id="pr"></p><div class="text-4xl font-mono font-bold" id="pc">10</div></div></div>
@@ -426,7 +429,29 @@ function _sfc(v){var p=document.getElementById('sfp'),j=document.getElementById(
 /* ============================================================
    EXAM ENGINE - MENAMPILKAN GAMBAR DARI CELL TERPISAH
    ============================================================ */
-EX.etk=function(){var inp=document.getElementById('itk'),err=document.getElementById('te'),btn=document.getElementById('btk'),tk=inp.value.trim().toUpperCase();if(!tk){err.textContent='Masukkan token';err.classList.remove('hidden');return}if(!EX.selExamId){err.textContent='Pilih ujian dulu';err.classList.remove('hidden');return}err.classList.add('hidden');btn.disabled=true;btn.textContent='...';G('validateToken',{token:tk,siswaId:U.id,ujian_id:EX.selExamId}).then(function(r){btn.disabled=false;btn.textContent='Mulai';if(!r.s){err.textContent=r.error;err.classList.remove('hidden');return}EX.token=tk;EX._st(tk)}).catch(function(er){btn.disabled=false;btn.textContent='Mulai';err.textContent=er;err.classList.remove('hidden')})};
+EX.etk=function(){
+  var inp=document.getElementById('itk'),err=document.getElementById('te'),btn=document.getElementById('btk'),tk=inp.value.trim().toUpperCase();
+  if(!tk){err.textContent='Masukkan token';err.classList.remove('hidden');return}
+  if(!EX.selExamId){err.textContent='Pilih ujian dulu';err.classList.remove('hidden');return}
+  err.classList.add('hidden');btn.disabled=true;btn.textContent='...';
+  /* REQUEST FULLSCREEN SEKARANG — masih dalam konteks klik user */
+  reqFS();
+  G('validateToken',{token:tk,siswaId:U.id,ujian_id:EX.selExamId}).then(function(r){
+    btn.disabled=false;btn.textContent='Mulai';
+    if(!r.s){
+      /* Gagal — keluar dari fullscreen */
+      try{document.exitFullscreen().catch(function(){})}catch(e){}
+      try{document.webkitExitFullscreen().catch(function(){})}catch(e){}
+      err.textContent=r.error;err.classList.remove('hidden');return;
+    }
+    EX.token=tk;EX._st(tk);
+  }).catch(function(er){
+    btn.disabled=false;btn.textContent='Mulai';
+    try{document.exitFullscreen().catch(function(){})}catch(e){}
+    try{document.webkitExitFullscreen().catch(function(){})}catch(e){}
+    err.textContent=er;err.classList.remove('hidden');
+  });
+};
 EX._st=function(tk){var btn=document.getElementById('btk');if(btn){btn.disabled=true;btn.textContent='...'}G('startExam',{token:tk,siswaId:U.id,siswaNama:U.nama,siswaKelas:U.kelas,ujian_id:EX.selExamId}).then(function(r){hiM('mt');if(!r.s){toast(r.error,'error');var btn2=document.getElementById('btk');if(btn2){btn2.disabled=false;btn2.textContent='Mulai'}return}var d=r.d;EX.ujian=d.ujian;EX.soal=d.soal;EX.siswa=d.siswa;EX.answers={};EX.ragu={};EX.cur=0;EX.viols=[];EX.vc=0;EX.paused=false;EX.st=new Date().toISOString();EX.tl=EX.ujian.durasi*60;EX.mS={};EX.oS={};hiM('sd');hiM('sl');var se=document.getElementById('se');se.classList.remove('hidden');se.style.display='flex';document.getElementById('et').textContent=EX.ujian.nama;document.getElementById('ei').textContent='Soal 1/'+EX.soal.length;EX.rq(0);EX.rn();EX.tm();enAC()}).catch(function(er){toast(er,'error');var btn2=document.getElementById('btk');if(btn2){btn2.disabled=false;btn2.textContent='Mulai'}})};
 EX.selExam=function(id,nama){EX.selExamId=id;EX.selExamNama=nama;document.getElementById('itk_id').value=id;var en=document.getElementById('itk_name');if(en)en.textContent=nama};
 EX.rn=function(){var g=document.getElementById('en');g.innerHTML=EX.soal.map(function(q,i){var cl=EX.ragu[i]?'bg-yellow-500 text-white':(EX.answers[q.id]!==undefined&&EX.answers[q.id]!=='')?'bg-purple-500 text-white':'bg-white/10 text-gray-400';return'<button onclick="EX.go('+i+')" class="w-9 h-9 rounded-lg text-xs font-bold flex items-center justify-center transition '+cl+' '+(i===EX.cur?'ring-2 ring-cyan-400':'')+'">'+(i+1)+'</button>'}).join('')};
@@ -548,6 +573,7 @@ EX.cf=function(){var ans=Object.keys(EX.answers).filter(function(k){return EX.an
 
 /* KIRIM JAWABAN - tidak perlu strip base64 lagi (pakai URL) */
 EX.ds=function(){
+    document.body.classList.remove('exam-active');
   var cf=document.getElementById('scf');if(cf)cf.remove();
   clearInterval(EX.timer);cAC();
   var p={ujian_id:EX.ujian.id,ujian_nama:EX.ujian.nama,siswa_id:EX.siswa.id,siswa_nama:EX.siswa.nama,siswa_kelas:EX.siswa.kelas,soal:EX.soal,answers:EX.answers,waktu_mulai:EX.st,waktu_selesai:new Date().toISOString(),pelanggaran_count:EX.vc,pelanggaran:EX.viols};
@@ -561,11 +587,80 @@ EX.ds=function(){
 
 /* ANTI-CHEAT */
 var _acA=false;
-function enAC(){_acA=true;document.addEventListener('visibilitychange',hVis);window.addEventListener('blur',hBlur);document.addEventListener('copy',function(e){if(_acA){e.preventDefault();lV('Copy')}});document.addEventListener('paste',function(e){if(_acA){e.preventDefault();lV('Paste')}});document.addEventListener('contextmenu',function(e){if(_acA){e.preventDefault()}});document.addEventListener('keydown',bK);try{document.documentElement.requestFullscreen().catch(function(){})}catch(e){}}
-function cAC(){_acA=false;document.removeEventListener('visibilitychange',hVis);window.removeEventListener('blur',hBlur);document.removeEventListener('keydown',bK);spTkR();try{if(document.fullscreenElement)document.exitFullscreen().catch(function(){})}catch(e){}}
+function enAC(){
+  _acA=true;_fsPause=false;
+  document.body.classList.add('exam-active');
+  reqFS();
+  document.addEventListener('fullscreenchange',handleFSChange);
+  document.addEventListener('webkitfullscreenchange',handleFSChange);
+  document.addEventListener('visibilitychange',hVis);
+  window.addEventListener('blur',hBlur);
+  document.addEventListener('copy',function(e){if(_acA){e.preventDefault();lV('Copy')}});
+  document.addEventListener('paste',function(e){if(_acA){e.preventDefault();lV('Paste')}});
+  document.addEventListener('cut',function(e){if(_acA){e.preventDefault();lV('Cut')}});
+  document.addEventListener('contextmenu',function(e){if(_acA){e.preventDefault()}});
+  document.addEventListener('keydown',bK);
+}
+function cAC(){
+  _acA=false;_fsPause=false;
+  document.body.classList.remove('exam-active');
+  document.removeEventListener('visibilitychange',hVis);
+  document.removeEventListener('blur',hBlur);
+  document.removeEventListener('keydown',bK);
+  document.removeEventListener('fullscreenchange',handleFSChange);
+  document.removeEventListener('webkitfullscreenchange',handleFSChange);
+  spTkR();
+  try{if(document.fullscreenElement)document.exitFullscreen().catch(function(){})}catch(e){}
+  try{if(document.webkitFullscreenElement)document.webkitExitFullscreen().catch(function(){})}catch(e){}
+}
 var _bT=null;function hBlur(){if(!_acA||EX.paused)return;if(_bT)return;_bT=setTimeout(function(){_bT=null},500);if(!document.hidden)lV('Window blur')}
 function hVis(){if(document.hidden&&_acA&&!EX.paused){EX.vc++;lV('Pindah tab');if(EX.vc>=3){toast('Terlalu banyak pelanggaran!','error');EX.ds()}else{EX.paused=true;toast('Peringatan '+EX.vc+'/3: Dijeda 10 detik','error');pEX(10)}}}
-function bK(e){if(!_acA||EX.paused)return;if(document.activeElement&&(document.activeElement.tagName==='TEXTAREA'||document.activeElement.tagName==='INPUT'))return;if(e.ctrlKey&&(e.key==='c'||e.key==='v'||e.key==='u'||e.key==='a')||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='i'))||e.key==='F12'){e.preventDefault();lV('Shortcut: '+e.key)}}
+function bK(e){
+  if(!_acA||EX.paused) return;
+  if(document.activeElement&&(document.activeElement.tagName==='TEXTAREA'||document.activeElement.tagName==='INPUT')) return;
+  /* F12 */
+  if(e.key==='F12'){e.preventDefault();lV('F12');return}
+  /* PrintScreen / Screenshot */
+  if(e.key==='PrintScreen'){e.preventDefault();try{navigator.clipboard.writeText('').catch(function(){})}catch(ex){}lV('Screenshot');return}
+  /* Ctrl/Cmd + kombinasi */
+  if(e.ctrlKey||e.metaKey){
+    var k=e.key.toLowerCase();
+    if(['c','v','u','a','s','p','h','r'].indexOf(k)!==-1){e.preventDefault();lV('Ctrl+'+e.key.toUpperCase());return}
+    if(e.shiftKey&&['i','j','c'].indexOf(k)!==-1){e.preventDefault();lV('Ctrl+Shift+'+e.key.toUpperCase());return}
+  }
+}
+/* Request fullscreen (cross-browser) */
+function reqFS(){
+  try{
+    var el=document.documentElement;
+    var fn=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+    if(fn) fn.call(el);
+  }catch(e){}
+}
+
+/* Deteksi perubahan fullscreen */
+function handleFSChange(){
+  if(!_acA) return;
+  var isFS=!!(document.fullscreenElement||document.webkitFullscreenElement);
+  if(isFS&&_fsPause){
+    _fsPause=false;EX.paused=false;
+    var ov=document.getElementById('po');
+    if(ov){ov.classList.add('hidden');ov.style.display='none'}
+    toast('Kembali ke fullscreen');
+  }else if(!isFS&&!_fsPause&&!EX.paused&&exA()){
+    _fsPause=true;EX.vc++;lV('Keluar fullscreen');
+    if(EX.vc>=3){toast('Terlalu banyak pelanggaran!','error');EX.ds()}
+    else{EX.paused=true;showFSOv()}
+  }
+}
+
+/* Overlay: paksa kembali ke fullscreen */
+function showFSOv(){
+  var ov=document.getElementById('po');
+  ov.classList.remove('hidden');ov.style.display='flex';
+  ov.innerHTML='<div class="text-center"><svg class="w-16 h-16 text-yellow-400 mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v6h6"/></svg><h2 class="text-2xl font-bold text-yellow-400 mb-2">FULLSCREEN DIPERLUKAN</h2><p class="text-gray-400 mb-2">Ujian harus dalam mode fullscreen</p><p class="text-sm text-red-400 mb-6">Pelanggaran ke-'+EX.vc+' dari 3 maksimal</p><button onclick="reqFS()" class="bp px-8 py-3 rounded-xl font-semibold text-base">Kembali ke Fullscreen</button></div>';
+  ic();
+}
 function lV(jenis){if(!EX.ujian||!EX.siswa)return;var v={ujian_id:EX.ujian.id,ujian_nama:EX.ujian.nama,siswa_id:EX.siswa.id,siswa_nama:EX.siswa.nama,jenis:jenis,detail:jenis+' terdeteksi',timestamp:new Date().toISOString()};EX.viols.push(v);G('logPelanggaran',v).catch(function(){})}
 function pEX(sec){var ov=document.getElementById('po'),ct=document.getElementById('pc'),rs=document.getElementById('pr');ov.classList.remove('hidden');ov.style.display='flex';if(rs)rs.textContent='Pelanggaran ke-'+EX.vc+' (maks 3)';var r=sec;ct.textContent=r;var iv=setInterval(function(){r--;ct.textContent=r;if(r<=0){clearInterval(iv);ov.classList.add('hidden');ov.style.display='';EX.paused=false}},1000)}
 document.addEventListener('keydown',function(e){if(!_acA||!exA()||EX.paused)return;if(document.activeElement&&(document.activeElement.tagName==='TEXTAREA'||document.activeElement.tagName==='INPUT'))return;if(e.key==='ArrowRight')EX.nx();else if(e.key==='ArrowLeft')EX.pr()});
