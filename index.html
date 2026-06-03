@@ -46,7 +46,7 @@ input,select,textarea{color:#fff}select option{background:#1a1a3e;color:#fff}
 </div>
 <div id="ml" class="fixed inset-0 z-[100] hidden items-center justify-center mo"><div class="gs rounded-2xl p-8 w-full max-w-md mx-4 relative asu"><button onclick="hiM('ml')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button><div class="text-center mb-6"><div class="w-14 h-14 rounded-xl bp flex items-center justify-center mx-auto mb-4"><i data-lucide="graduation-cap" class="w-7 h-7"></i></div><h3 class="text-xl font-bold">Masuk</h3></div><div class="flex gap-2 mb-6 bg-white/5 rounded-xl p-1" id="rt"></div><form onsubmit="return AU.login(event)"><label class="text-sm text-gray-300 block mb-1">Username</label><input id="iu" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 mb-4 text-sm focus:outline-none focus:border-purple-500" required><label class="text-sm text-gray-300 block mb-1">Password</label><input id="ip" type="password" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 mb-4 text-sm focus:outline-none focus:border-purple-500" required><div id="le" class="hidden mb-4 bg-red-500/20 text-red-300 text-sm rounded-xl p-3 text-center"></div><button type="submit" id="lb" class="w-full bp py-3 rounded-xl font-semibold">Masuk</button></form></div></div>
 <div id="sd" class="hidden flex-1 flex overflow-hidden"><div class="dov" onclick="tSB()"></div><aside class="ds w-64 gs border-r border-white/10 flex flex-col shrink-0 overflow-y-auto"><div class="p-6 flex items-center gap-3 border-b border-white/5"><div class="w-9 h-9 rounded-lg bp flex items-center justify-center"><i data-lucide="graduation-cap" class="w-4 h-4"></i></div><span class="font-bold text-sm">SmartCBT Pro</span></div><nav id="sn" class="flex-1 p-4 space-y-1"></nav><div class="p-4 border-t border-white/5"><button onclick="AU.out()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-400 hover:text-white hover:bg-red-500/10"><i data-lucide="log-out" class="w-4 h-4"></i>Keluar</button></div></aside><main class="flex-1 overflow-y-auto"><div class="p-6 lg:p-8"><div class="flex items-center justify-between mb-8"><div class="flex items-center gap-3"><button onclick="tSB()" class="md:hidden glass p-2 rounded-lg"><i data-lucide="menu" class="w-5 h-5"></i></button><div><h1 id="dt" class="text-2xl font-bold"></h1><p id="ds" class="text-sm text-gray-400 mt-1"></p></div></div><div class="glass rounded-xl px-4 py-2 flex items-center gap-2 text-sm"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span><span id="ud" class="text-gray-300"></span></div></div><div id="dc"></div></div></main></div>
-<div id="se" class="hidden flex-1 flex flex-col overflow-hidden"><header class="gs border-b border-white/10 px-6 py-3 flex items-center justify-between shrink-0"><div class="flex items-center gap-4"><i data-lucide="file-text" class="w-5 h-5 text-purple-400"></i><span class="font-semibold text-sm" id="et"></span><span class="text-xs text-gray-400" id="ei"></span></div><div class="flex items-center gap-2 bg-red-500/20 px-3 py-1.5 rounded-lg"><i data-lucide="clock" class="w-4 h-4 text-red-400"></i><span id="etm" class="text-sm font-mono font-bold text-red-300">00:00:00</span></div></header><div class="flex-1 flex overflow-hidden"><div class="flex-1 overflow-y-auto p-6 lg:p-8"><div id="eq"></div></div><aside class="es w-64 gs border-l border-white/10 p-4 overflow-y-auto shrink-0"><h3 class="text-sm font-semibold mb-3">Navigasi</h3><div id="en" class="grid grid-cols-5 gap-2 mb-6"></div><div class="space-y-2 text-xs"><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-purple-500"></div><span class="text-gray-400">Dijawab</span></div><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-yellow-500"></div><span class="text-gray-400">Ragu</span></div><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-white/10"></div><span class="text-gray-400">Belum</span></div></div><button onclick="EX.cf()" class="w-full mt-6 bg-green-600 hover:bg-green-700 px-4 py-3 rounded-xl text-sm font-semibold transition">Selesai & Kirim</button></aside></div><div class="md:hidden gs border-t border-white/10 px-4 py-3 flex items-center justify-between shrink-0"><button onclick="EX.pr()" class="glass px-4 py-2 rounded-lg text-sm">&larr;</button><span class="text-sm text-gray-400" id="emb"></span><button onclick="EX.nx()" class="bp px-4 py-2 rounded-lg text-sm">&rarr;</button></div></div>
+<div id="se" class="hidden flex-1 flex flex-col overflow-hidden"><header class="gs border-b border-white/10 px-6 py-3 flex items-center justify-between shrink-0"><div class="flex items-center gap-4"><i data-lucide="file-text" class="w-5 h-5 text-purple-400"></i><span class="font-semibold text-sm" id="et"></span><span class="text-xs text-gray-400" id="ei"></span></div><button onclick="EX.tgSB()" class="hidden lg:flex glass px-3 py-1.5 rounded-lg items-center gap-2 text-sm hover:bg-white/10 transition" title="Toggle Navigasi"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/></svg></button><div class="flex items-center gap-2 bg-red-500/20 px-3 py-1.5 rounded-lg"><i data-lucide="clock" class="w-4 h-4 text-red-400"></i><span id="etm" class="text-sm font-mono font-bold text-red-300">00:00:00</span></div></header><div class="flex-1 flex overflow-hidden"><div class="flex-1 overflow-y-auto p-6 lg:p-8"><div id="eq"></div></div><aside id="exam_sb" class="es w-56 gs border-l border-white/10 p-4 overflow-y-auto shrink-0 transition-all duration-300"><h3 class="text-sm font-semibold mb-3">Navigasi</h3><div id="en" class="grid grid-cols-5 gap-2 mb-6"></div><div class="space-y-2 text-xs"><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-purple-500"></div><span class="text-gray-400">Dijawab</span></div><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-yellow-500"></div><span class="text-gray-400">Ragu</span></div><div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-white/10"></div><span class="text-gray-400">Belum</span></div></div><button onclick="EX.cf()" class="w-full mt-6 bg-green-600 hover:bg-green-700 px-4 py-3 rounded-xl text-sm font-semibold transition">Selesai & Kirim</button></aside></div><div class="md:hidden gs border-t border-white/10 px-4 py-3 flex items-center justify-between shrink-0"><button onclick="EX.pr()" class="glass px-4 py-2 rounded-lg text-sm">&larr;</button><span class="text-sm text-gray-400" id="emb"></span><button onclick="EX.nx()" class="bp px-4 py-2 rounded-lg text-sm">&rarr;</button></div></div>
 <div id="mg" class="fixed inset-0 z-[110] hidden items-center justify-center mo"><div class="gs rounded-2xl p-6 w-full max-w-lg mx-4 relative asu max-h-[90vh] overflow-y-auto"><button onclick="hiM('mg')" class="absolute top-4 right-4 text-gray-400 hover:text-white z-10"><i data-lucide="x" class="w-5 h-5"></i></button><div id="mb"></div></div></div>
 <div id="mt" class="fixed inset-0 z-[100] hidden items-center justify-center mo"><div class="gs rounded-2xl p-8 w-full max-w-md mx-4 relative asu"><h3 class="text-xl font-bold mb-2 text-center">Masuk Ujian</h3><p class="text-sm text-gray-400 text-center mb-6">Masukkan token dari guru</p><input type="hidden" id="itk_id" value=""><input id="itk" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 mb-2 text-sm text-center font-mono text-lg tracking-widest uppercase" placeholder="XXXXXXXX" maxlength="8"><p class="text-xs text-gray-400 text-center mb-4" id="itk_name"></p><div id="te" class="hidden mb-4 bg-red-500/20 text-red-300 text-sm rounded-xl p-3 text-center"></div><button onclick="EX.etk()" id="btk" class="w-full bp py-3 rounded-xl font-semibold">Mulai</button><button onclick="hiM('mt')" class="w-full mt-3 glass py-3 rounded-xl text-sm text-gray-400 hover:text-white transition">Batal</button></div></div>
 <div id="po" class="fixed inset-0 z-[150] hidden bg-black/95 flex items-center justify-center"><div class="text-center"><i data-lucide="shield-alert" class="w-16 h-16 text-red-400 mx-auto mb-4"></i><h2 class="text-2xl font-bold text-red-400 mb-2">DIJEDA</h2><p class="text-gray-400 mb-4" id="pr"></p><div class="text-4xl font-mono font-bold" id="pc">10</div></div></div>
@@ -138,14 +138,13 @@ function rT(t,img){
     var im=[];
     var p=t.replace(/\[IMG:(.*?)\]/g,function(m,u){var i=im.length;im.push(u);return'%%'+i+'%%'});
     p=esc(p);
-    for(var i=0;i<im.length;i++) p=p.replace('%%'+i+'%%','<img src="'+esc(imgUrl(im[i]))+'" class="max-w-full max-h-48 rounded-lg my-2" onerror="this.style.display=\'none\'">');
+    for(var i=0;i<im.length;i++) p=p.replace('%%'+i+'%%','<img src="'+esc(imgUrl(im[i]))+'" class="max-w-full max-h-80 rounded-lg my-2" onerror="this.style.display=\'none\'">');
     html+=p;
   }
-  /* Gambar dari cell terpisah — dengan fallback ke thumbnail Drive */
   if(img){
-    var src1 = esc(imgUrl(img));
-    var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(img) + '&sz=w800';
-    html += '<div class="my-3"><img src="'+src1+'" onerror="this.onerror=null;this.src=\''+src2+'\';" class="max-w-full max-h-64 rounded-lg" onerror="this.style.display=\'none\'"></div>';
+    var src1=esc(imgUrl(img));
+    var src2='https://drive.google.com/thumbnail?id='+encodeURIComponent(img)+'&sz=w1200';
+    html+='<div class="my-3"><img src="'+src1+'" onerror="this.onerror=null;this.src=\''+src2+'\';" class="max-w-full max-h-96 rounded-lg" onerror="this.style.display=\'none\'"></div>';
   }
   return html;
 }
@@ -159,17 +158,16 @@ function rO(t,img){
   if(t){
     if(t.match(/\[IMG:/)){
       html+=t.replace(/\[IMG:(.*?)\]/g,function(m,u){
-        return '<img src="'+esc(imgUrl(u))+'" class="max-h-16 rounded inline-block mx-1 align-middle" onerror="this.style.display=\'none\'">';
+        return '<img src="'+esc(imgUrl(u))+'" class="max-h-20 rounded inline-block mx-1 align-middle" onerror="this.style.display=\'none\'">';
       });
     }else{
       html+=esc(t);
     }
   }
-  /* Gambar opsi dari cell terpisah — dengan fallback */
   if(img){
-    var src1 = esc(imgUrl(img));
-    var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(img) + '&sz=w400';
-    html += '<img src="'+src1+'" onerror="this.onerror=null;this.src=\''+src2+'\';" class="max-h-16 rounded inline-block mx-1 align-middle" onerror="this.style.display=\'none\'">';
+    var src1=esc(imgUrl(img));
+    var src2='https://drive.google.com/thumbnail?id='+encodeURIComponent(img)+'&sz=w600';
+    html+='<img src="'+src1+'" onerror="this.onerror=null;this.src=\''+src2+'\';" class="max-h-20 rounded inline-block mx-1 align-middle" onerror="this.style.display=\'none\'">';
   }
   return html;
 }
@@ -247,8 +245,124 @@ stats:function(){var ct=document.getElementById('dc');G('getStats',{role:U.role,
 /* ============================================================
    PREVIEW SOAL - MENAMPILKAN GAMBAR DARI CELL TERPISAH
    ============================================================ */
-preview:function(){var ct=document.getElementById('dc');document.getElementById('ds').textContent='Preview semua soal dari spreadsheet';ct.innerHTML=ldH();G('getAllSoal').then(function(r){if(!r.s){ct.innerHTML='<p class="text-red-400">'+esc(r.error)+'</p>';ic();return}var all=r.d,types={pg:0,bs:0,short:0,essay:0,menjodohkan:0,menyusun:0};all.forEach(function(q){if(types[q.jenis]!==undefined)types[q.jenis]++});var tl={pg:'Pilihan Ganda',bs:'Benar/Salah',short:'Isian',essay:'Essay',menjodohkan:'Menjodohkan',menyusun:'Menyusun'};var h='<div class="mb-6 flex flex-wrap gap-2"><button onclick="DH.previewF(\'\',this)" class="pvf on px-4 py-2 rounded-xl text-xs font-semibold transition">Semua ('+all.length+')</button>';for(var t in tl){h+='<button onclick="DH.previewF(\''+t+'\',this)" class="pvf px-4 py-2 rounded-xl text-xs font-semibold transition">'+tl[t]+' ('+types[t]+')</button>'}h+='</div><div id="pvc"></div>';ct.innerHTML=h;DH.previewF('',document.querySelector('.pvf'));ic()}).catch(function(e){ct.innerHTML='<p class="text-red-400">'+esc(e)+'</p>';ic()})},
-previewF:function(jns,btn){document.querySelectorAll('.pvf').forEach(function(b){b.classList.remove('on')});if(btn)btn.classList.add('on');var ct=document.getElementById('pvc');ct.innerHTML=ldH();G('getAllSoal').then(function(r){if(!r.s){ct.innerHTML='<p class="text-red-400">'+esc(r.error)+'</p>';ic();return}var all=r.d,filtered=jns?all.filter(function(q){return q.jenis===jns}):all;if(!filtered.length){ct.innerHTML='<div class="gs rounded-xl p-8 text-center text-gray-400">Tidak ada soal</div>';ic();return}var tl={pg:'PG',bs:'B/S',short:'Isian',essay:'Essay',menjodohkan:'Jodoh',menyusun:'Susun'};var cl={pg:'bg-blue-500/20 text-blue-400',bs:'bg-green-500/20 text-green-400',short:'bg-cyan-500/20 text-cyan-400',essay:'bg-purple-500/20 text-purple-400',menjodohkan:'bg-yellow-500/20 text-yellow-400',menyusun:'bg-pink-500/20 text-pink-400'};var h='<div class="space-y-4">';filtered.forEach(function(q,i){h+='<div class="gs rounded-xl p-6 fi"><div class="flex items-start justify-between gap-4 mb-3"><div class="flex items-center gap-3"><span class="text-xs text-gray-500 font-mono w-8 shrink-0">#'+(i+1)+'</span><span class="text-xs px-2 py-0.5 rounded-full '+cl[q.jenis]+'">'+(tl[q.jenis]||q.jenis)+'</span>'+(q.gambar?'<span class="text-xs text-cyan-400">&#9679; gambar</span>':'')+'</div><span class="text-xs text-gray-500 shrink-0">'+esc(q.skor_max||'1')+' poin</span></div>';/* TEKS SOAL + GAMBAR TERPISAH */h+='<div class="text-sm leading-relaxed mb-4 pl-11">'+rT(q.teks,q.gambar)+'</div>';if(q.jenis==='pg'){var opts=[{t:q.opsi_a,img:q.opsi_a_gambar},{t:q.opsi_b,img:q.opsi_b_gambar},{t:q.opsi_c,img:q.opsi_c_gambar},{t:q.opsi_d,img:q.opsi_d_gambar}].filter(function(o){return o.t});var lb=['A','B','C','D'];h+='<div class="space-y-2 pl-11 mb-4">';opts.forEach(function(o,oi){var isK=(o.t===q.kunci_jawaban);h+='<div class="flex items-start gap-3 p-3 rounded-xl '+(isK?'bg-green-500/10 border border-green-500/30':'bg-white/5 border border-white/10')+'"><span class="w-7 h-7 rounded-lg '+(isK?'bg-green-500 text-white':'bg-white/10 text-gray-400')+' flex items-center justify-center text-xs font-bold shrink-0">'+lb[oi]+'</span><span class="text-sm '+(isK?'text-green-300':'text-gray-300')+'">'+rO(o.t,o.img)+'</span></div>'});h+='</div>';}else if(q.jenis==='bs'){var isB=(q.kunci_jawaban==='Benar');h+='<div class="flex gap-3 pl-11 mb-4"><span class="px-4 py-2 rounded-xl text-sm font-semibold '+(isB?'bg-green-500/20 text-green-400 border border-green-500/30':'bg-white/5 text-gray-400 border border-white/10')+'">Benar</span><span class="px-4 py-2 rounded-xl text-sm font-semibold '+(isB?'bg-white/5 text-gray-500 border border-white/10':'bg-red-500/20 text-red-400 border border-red-500/30')+'">Salah</span></div>';}else if(q.jenis==='short'){h+='<div class="pl-11 mb-4"><span class="text-xs text-gray-500">Kunci:</span> <span class="text-sm font-mono text-green-400 ml-2">'+esc(q.kunci_jawaban)+'</span></div>';}else if(q.jenis==='menjodohkan'){var L=(q.opsi_a||'').split('|').filter(Boolean);var R=(q.opsi_b||'').split('|').filter(Boolean);var pairs=(q.kunci_jawaban||'').split('|').filter(Boolean);h+='<div class="pl-11 mb-4"><p class="text-xs text-gray-500 mb-2">Pasangan: '+esc(q.kunci_jawaban)+'</p><div class="grid grid-cols-2 gap-2">';pairs.forEach(function(pr){var idx=pr.split(',').map(function(x){return parseInt(x)});h+='<div class="bg-white/5 rounded-lg p-2 text-xs"><span class="text-purple-300">'+esc(L[idx[0]]||'-')+'</span> <span class="text-gray-500">&rarr;</span> <span class="text-cyan-300">'+esc(R[idx[1]]||'-')+'</span></div>'});h+='</div></div>';}else if(q.jenis==='menyusun'){var words=(q.opsi_a||'').split('|').filter(Boolean);var order=(q.kunci_jawaban||'').split('|').filter(Boolean);h+='<div class="pl-11 mb-4"><p class="text-xs text-gray-500 mb-2">Urutan benar:</p><div class="flex flex-wrap gap-2">';order.forEach(function(oi,pi){h+='<span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded text-xs font-mono">'+(pi+1)+'. '+esc(words[parseInt(oi)]||'-')+'</span>'});h+='</div></div>'}h+='</div>'});h+='</div>';ct.innerHTML=h;ic()}).catch(function(e){ct.innerHTML='<p class="text-red-400">'+esc(e)+'</p>';ic()})},
+/* State filter preview */
+_pvData:[],_pvMap:{},_pvExam:'',_pvType:'',
+
+preview:function(){
+  var ct=document.getElementById('dc');
+  document.getElementById('ds').textContent='Preview semua soal dari spreadsheet';
+  ct.innerHTML=ldH();
+  Promise.all([G('getAllSoal'),G('getUjian',{role:U.role,userId:U.id,kelas:U.kelas})]).then(function(res){
+    var allSoal=res[0].d||[],allUjian=res[1].d||[];
+    var ujianMap={};
+    allUjian.forEach(function(u){ujianMap[u.id]=u.nama});
+
+    /* Hitung soal per ujian */
+    var examCnt={};
+    allSoal.forEach(function(q){examCnt[q.ujian_id]=(examCnt[q.ujian_id]||0)+1});
+
+    /* Dropdown ujian */
+    var opts='<option value="">Semua Ujian ('+allSoal.length+')</option>';
+    allUjian.forEach(function(u){
+      var c=examCnt[u.id]||0;
+      if(c>0) opts+='<option value="'+u.id+'">'+esc(u.nama)+' ('+c+')</option>';
+    });
+
+    /* Hitung per tipe */
+    var types={pg:0,bs:0,short:0,essay:0,menjodohkan:0,menyusun:0};
+    allSoal.forEach(function(q){if(types[q.jenis]!==undefined)types[q.jenis]++});
+    var tl={pg:'Pilihan Ganda',bs:'Benar/Salah',short:'Isian',essay:'Essay',menjodohkan:'Menjodohkan',menyusun:'Menyusun'};
+
+    var h='<div class="mb-6 space-y-3">';
+    h+='<div class="flex flex-wrap items-center gap-3"><label class="text-xs text-gray-400 font-semibold shrink-0">Ujian:</label>';
+    h+='<select id="pv_exam" onchange="DH._pvCh()" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500 flex-1 max-w-md">'+opts+'</select></div>';
+    h+='<div class="flex flex-wrap gap-2" id="pv_tbtns">';
+    h+='<button onclick="DH._pvST(\'\',this)" class="pvf on px-4 py-2 rounded-xl text-xs font-semibold transition">Semua ('+allSoal.length+')</button>';
+    for(var t in tl) h+='<button onclick="DH._pvST(\''+t+'\',this)" class="pvf px-4 py-2 rounded-xl text-xs font-semibold transition">'+tl[t]+' ('+types[t]+')</button>';
+    h+='</div></div><div id="pvc"></div>';
+
+    ct.innerHTML=h;
+    DH._pvData=allSoal;DH._pvMap=ujianMap;DH._pvExam='';DH._pvType='';
+    DH._pvRender();ic();
+  }).catch(function(e){ct.innerHTML='<p class="text-red-400">'+esc(e)+'</p>';ic()});
+},
+
+/* Ganti filter tipe */
+_pvST:function(jns,btn){
+  DH._pvType=jns;
+  document.querySelectorAll('#pv_tbtns .pvf').forEach(function(b){b.classList.remove('on')});
+  if(btn)btn.classList.add('on');
+  DH._pvRender();
+},
+
+/* Ganti filter ujian dari dropdown */
+_pvCh:function(){
+  DH._pvExam=document.getElementById('pv_exam').value;
+  DH._pvRender();
+},
+
+/* Render soal sesuai filter aktif */
+_pvRender:function(){
+  var all=DH._pvData||[],filtered=all;
+  if(DH._pvExam) filtered=filtered.filter(function(q){return q.ujian_id===DH._pvExam});
+  if(DH._pvType) filtered=filtered.filter(function(q){return q.jenis===DH._pvType});
+
+  /* Update angka pada tombol tipe (sesuai filter ujian saat ini) */
+  var base=DH._pvExam?all.filter(function(q){return q.ujian_id===DH._pvExam}):all;
+  var types={pg:0,bs:0,short:0,essay:0,menjodohkan:0,menyusun:0};
+  base.forEach(function(q){if(types[q.jenis]!==undefined)types[q.jenis]++});
+  var tS={pg:'PG',bs:'B/S',short:'Isian',essay:'Essay',menjodohkan:'Jodoh',menyusun:'Susun'};
+  var btns=document.querySelectorAll('#pv_tbtns .pvf');
+  if(btns.length){
+    btns[0].textContent='Semua ('+base.length+')';
+    var ti=0;for(var t in tS){ti++;if(btns[ti])btns[ti].textContent=tS[t]+' ('+types[t]+')';}
+  }
+
+  var ct=document.getElementById('pvc');
+  if(!filtered.length){ct.innerHTML='<div class="gs rounded-xl p-8 text-center text-gray-400">Tidak ada soal</div>';ic();return}
+
+  var tl={pg:'PG',bs:'B/S',short:'Isian',essay:'Essay',menjodohkan:'Jodoh',menyusun:'Susun'};
+  var cl={pg:'bg-blue-500/20 text-blue-400',bs:'bg-green-500/20 text-green-400',short:'bg-cyan-500/20 text-cyan-400',essay:'bg-purple-500/20 text-purple-400',menjodohkan:'bg-yellow-500/20 text-yellow-400',menyusun:'bg-pink-500/20 text-pink-400'};
+  var h='<div class="space-y-4">';
+
+  filtered.forEach(function(q,i){
+    var eName=DH._pvMap[q.ujian_id]||q.ujian_id||'-';
+    h+='<div class="gs rounded-xl p-6 fi"><div class="flex items-start justify-between gap-4 mb-2"><div class="flex items-center gap-2 flex-wrap"><span class="text-xs text-gray-500 font-mono w-8 shrink-0">#'+(i+1)+'</span><span class="text-xs px-2 py-0.5 rounded-full '+cl[q.jenis]+'">'+(tl[q.jenis]||q.jenis)+'</span>'+(q.gambar?'<span class="text-xs text-cyan-400">&#9679; img</span>':'')+'</div><span class="text-xs text-gray-500 shrink-0">'+esc(q.skor_max||'1')+' pt</span></div>';
+    /* Nama ujian */
+    h+='<div class="text-xs text-purple-400/80 mb-3 pl-11 flex items-center gap-1"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>'+esc(eName)+'</div>';
+    /* Teks + gambar soal */
+    h+='<div class="text-sm leading-relaxed mb-4 pl-11">'+rT(q.teks,q.gambar)+'</div>';
+
+    if(q.jenis==='pg'){
+      var opts=[{t:q.opsi_a,img:q.opsi_a_gambar},{t:q.opsi_b,img:q.opsi_b_gambar},{t:q.opsi_c,img:q.opsi_c_gambar},{t:q.opsi_d,img:q.opsi_d_gambar}].filter(function(o){return o.t});
+      var lb=['A','B','C','D'];
+      h+='<div class="space-y-2 pl-11 mb-4">';
+      opts.forEach(function(o,oi){
+        var isK=(o.t===q.kunci_jawaban);
+        h+='<div class="flex items-start gap-3 p-3 rounded-xl '+(isK?'bg-green-500/10 border border-green-500/30':'bg-white/5 border border-white/10')+'"><span class="w-7 h-7 rounded-lg '+(isK?'bg-green-500 text-white':'bg-white/10 text-gray-400')+' flex items-center justify-center text-xs font-bold shrink-0">'+lb[oi]+'</span><span class="text-sm '+(isK?'text-green-300':'text-gray-300')+'">'+rO(o.t,o.img)+'</span></div>';
+      });
+      h+='</div>';
+    }else if(q.jenis==='bs'){
+      var isB=(q.kunci_jawaban==='Benar');
+      h+='<div class="flex gap-3 pl-11 mb-4"><span class="px-4 py-2 rounded-xl text-sm font-semibold '+(isB?'bg-green-500/20 text-green-400 border border-green-500/30':'bg-white/5 text-gray-400 border border-white/10')+'">Benar</span><span class="px-4 py-2 rounded-xl text-sm font-semibold '+(isB?'bg-white/5 text-gray-500 border border-white/10':'bg-red-500/20 text-red-400 border border-red-500/30')+'">Salah</span></div>';
+    }else if(q.jenis==='short'){
+      h+='<div class="pl-11 mb-4"><span class="text-xs text-gray-500">Kunci:</span> <span class="text-sm font-mono text-green-400 ml-2">'+esc(q.kunci_jawaban)+'</span></div>';
+    }else if(q.jenis==='menjodohkan'){
+      var L=(q.opsi_a||'').split('|').filter(Boolean),R=(q.opsi_b||'').split('|').filter(Boolean),pairs=(q.kunci_jawaban||'').split('|').filter(Boolean);
+      h+='<div class="pl-11 mb-4"><p class="text-xs text-gray-500 mb-2">Pasangan: '+esc(q.kunci_jawaban)+'</p><div class="grid grid-cols-2 gap-2">';
+      pairs.forEach(function(pr){var idx=pr.split(',').map(function(x){return parseInt(x)});h+='<div class="bg-white/5 rounded-lg p-2 text-xs"><span class="text-purple-300">'+esc(L[idx[0]]||'-')+'</span> <span class="text-gray-500">&rarr;</span> <span class="text-cyan-300">'+esc(R[idx[1]]||'-')+'</span></div>'});
+      h+='</div></div>';
+    }else if(q.jenis==='menyusun'){
+      var words=(q.opsi_a||'').split('|').filter(Boolean),order=(q.kunci_jawaban||'').split('|').filter(Boolean);
+      h+='<div class="pl-11 mb-4"><p class="text-xs text-gray-500 mb-2">Urutan benar:</p><div class="flex flex-wrap gap-2">';
+      order.forEach(function(oi,pi){h+='<span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded text-xs font-mono">'+(pi+1)+'. '+esc(words[parseInt(oi)]||'-')+'</span>'});
+      h+='</div></div>';
+    }
+    h+='</div>';
+  });
+  h+='</div>';
+  ct.innerHTML=h;ic();
+},
 
 resetD:function(){if(!confirm('PERINGATAN!\n\nSemua data akan dihapus dan dikembalikan ke kondisi awal.\nTindakan ini TIDAK BISA dibatalkan!\n\nLanjutkan?'))return;toast('Mereset data...','warning');G('resetData',{}).then(function(r){if(!r.s){toast(r.error,'error');return}toast(r.m);setTimeout(function(){lv('home')},500)}).catch(function(e){toast(e,'error')})},
 dE:function(sn){toast('Mengunduh...');G('exportCSV',{sheetName:sn}).then(function(r){if(!r.s){toast(r.error,'error');return}var b=new Blob([r.d],{type:'text/csv'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=r.filename;a.click();URL.revokeObjectURL(u);toast('Berhasil')}).catch(function(e){toast(e,'error')})},
@@ -319,15 +433,21 @@ EX.rn=function(){var g=document.getElementById('en');g.innerHTML=EX.soal.map(fun
 EX.go=function(i){EX.cur=i;EX.rq(i);EX.rn();document.getElementById('ei').textContent='Soal '+(i+1)+'/'+EX.soal.length;var m=document.getElementById('emb');if(m)m.textContent=(i+1)+'/'+EX.soal.length};
 EX.pr=function(){if(EX.cur>0)EX.go(EX.cur-1)};
 EX.nx=function(){if(EX.cur<EX.soal.length-1)EX.go(EX.cur+1)};
-
+EX.tgSB=function(){
+  var sb=document.getElementById('exam_sb');
+  if(!sb) return;
+  if(sb.style.display==='none'){
+    sb.style.display='';sb.style.width='';
+  }else{
+    sb.style.display='none';
+  }
+};
 /* RENDER SOAL UJIAN - GAMBAR DARI CELL TERPISAH */
 EX.rq=function(i){
   var q=EX.soal[i],a=document.getElementById('eq');
   var jl={pg:'Pilihan Ganda',bs:'Benar / Salah',essay:'Essay',short:'Isian Singkat',menjodohkan:'Menjodohkan',menyusun:'Menyusun Kalimat'};
-  var h='<div class="gs rounded-2xl p-6 lg:p-8 fi"><div class="flex items-center gap-3 mb-6"><span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs font-semibold">'+esc(jl[q.jenis]||q.jenis)+'</span><span class="text-sm text-gray-400">Soal '+(i+1)+'</span></div>';
-
-  /* TEKS SOAL + GAMBAR TERPISAH */
-  h+='<div class="text-lg leading-relaxed mb-6">'+rT(q.teks,q.gambar)+'</div>';
+  var h='<div class="gs rounded-2xl p-5 lg:p-7 fi"><div class="flex items-center gap-3 mb-5"><span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs font-semibold">'+esc(jl[q.jenis]||q.jenis)+'</span><span class="text-sm text-gray-400">Soal '+(i+1)+'</span></div>';
+  h+='<div class="text-base lg:text-lg leading-relaxed mb-5">'+rT(q.teks,q.gambar)+'</div>';
 
   if(q.jenis==='pg'){
     var imgFields=['opsi_a_gambar','opsi_b_gambar','opsi_c_gambar','opsi_d_gambar'];
@@ -335,24 +455,36 @@ EX.rq=function(i){
     var lb=['A','B','C','D'];
     h+='<div class="space-y-3">'+opts.map(function(o,oi){
       var s=EX.answers[q.id]===o.t;
-      return'<button onclick="EX.an(\''+q.id+'\',\''+escJ(o.t)+'\')" class="w-full text-left flex items-center gap-3 p-4 rounded-xl transition '+(s?'bg-purple-500/30 border border-purple-500':'bg-white/5 border border-white/10 hover:border-purple-500/50')+'"><span class="w-8 h-8 rounded-lg '+(s?'bg-purple-500 text-white':'bg-white/10 text-gray-400')+' flex items-center justify-center text-sm font-bold shrink-0">'+lb[oi]+'</span><span>'+rO(o.t,o.img)+'</span></button>';
+      return'<button id="pgopt_'+oi+'" data-pgidx="'+oi+'" data-pgval="'+escJ(o.t)+'" onclick="EX.an(\''+q.id+'\',\''+escJ(o.t)+'\')" class="w-full text-left flex items-center gap-3 p-4 rounded-xl transition '+(s?'bg-purple-500/30 border border-purple-500':'bg-white/5 border border-white/10 hover:border-purple-500/50')+'"><span id="pgltr_'+oi+'" class="w-9 h-9 rounded-lg '+(s?'bg-purple-500 text-white':'bg-white/10 text-gray-400')+' flex items-center justify-center text-sm font-bold shrink-0">'+lb[oi]+'</span><span class="text-sm lg:text-base">'+rO(o.t,o.img)+'</span></button>';
     }).join('')+'</div>';
+
   }else if(q.jenis==='bs'){
-    h+='<div class="flex gap-4"><button onclick="EX.an(\''+q.id+'\',\'Benar\')" class="flex-1 p-4 rounded-xl text-center font-semibold transition '+(EX.answers[q.id]==='Benar'?'bg-green-500/30 border-2 border-green-500':'bg-white/5 border-2 border-white/10 hover:border-green-500/50')+'">Benar</button><button onclick="EX.an(\''+q.id+'\',\'Salah\')" class="flex-1 p-4 rounded-xl text-center font-semibold transition '+(EX.answers[q.id]==='Salah'?'bg-red-500/30 border-2 border-red-500':'bg-white/5 border-2 border-white/10 hover:border-red-500/50')+'">Salah</button></div>';
+    h+='<div class="flex gap-4"><button id="bs_benar" onclick="EX.an(\''+q.id+'\',\'Benar\')" class="flex-1 p-4 rounded-xl text-center font-semibold transition '+(EX.answers[q.id]==='Benar'?'bg-green-500/30 border-2 border-green-500':'bg-white/5 border-2 border-white/10 hover:border-green-500/50')+'">Benar</button><button id="bs_salah" onclick="EX.an(\''+q.id+'\',\'Salah\')" class="flex-1 p-4 rounded-xl text-center font-semibold transition '+(EX.answers[q.id]==='Salah'?'bg-red-500/30 border-2 border-red-500':'bg-white/5 border-2 border-white/10 hover:border-red-500/50')+'">Salah</button></div>';
+
   }else if(q.jenis==='essay'){
     h+='<textarea oninput="EX.at(\''+q.id+'\',this.value)" class="w-full h-40 bg-white/5 border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-purple-500 resize-none" placeholder="Tulis jawaban...">'+esc(EX.answers[q.id]||'')+'</textarea>';
+
   }else if(q.jenis==='short'){
     h+='<input type="text" oninput="EX.at(\''+q.id+'\',this.value)" value="'+esc(EX.answers[q.id]||'')+'" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500" placeholder="Jawaban...">';
+
   }else if(q.jenis==='menjodohkan'){
     h+='<div id="mb_'+q.id+'">'+EX._rM(q)+'</div>';
+
   }else if(q.jenis==='menyusun'){
     h+='<div id="ob_'+q.id+'">'+EX._rO(q)+'</div>';
   }
-  h+='<div class="flex items-center gap-3 mt-6 pt-4 border-t border-white/5"><button onclick="EX.tr('+i+')" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition '+(EX.ragu[i]?'bg-yellow-500/20 text-yellow-400 border border-yellow-500':'bg-white/5 text-gray-400 border border-white/10 hover:border-yellow-500/50')+'">Ragu</button><div class="flex-1"></div>';
-  if(i>0)h+='<button onclick="EX.pr()" class="glass px-5 py-2.5 rounded-xl text-sm">&larr;</button>';
-  if(i<EX.soal.length-1)h+='<button onclick="EX.nx()" class="bp px-5 py-2.5 rounded-xl text-sm">&rarr;</button>';
+
+  h+='<div class="flex items-center gap-3 mt-5 pt-4 border-t border-white/5">';
+  h+='<button id="ragu_btn" onclick="EX.tr('+i+')" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition '+(EX.ragu[i]?'bg-yellow-500/20 text-yellow-400 border border-yellow-500':'bg-white/5 text-gray-400 border border-white/10 hover:border-yellow-500/50')+'"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4m-7.07-3.93l2.83-2.83m8.48-8.48l2.83-2.83M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83"/></svg>Ragu</button>';
+  h+='<div class="flex-1"></div>';
+  if(i>0) h+='<button onclick="EX.pr()" class="glass px-5 py-2.5 rounded-xl text-sm">&larr; Sebelumnya</button>';
+  if(i<EX.soal.length-1) h+='<button onclick="EX.nx()" class="bp px-5 py-2.5 rounded-xl text-sm">Selanjutnya &rarr;</button>';
   h+='</div></div>';
-  a.innerHTML=h;document.getElementById('ei').textContent='Soal '+(i+1)+'/'+EX.soal.length;var m=document.getElementById('emb');if(m)m.textContent=(i+1)+'/'+EX.soal.length;ic();
+
+  a.innerHTML=h;
+  document.getElementById('ei').textContent='Soal '+(i+1)+'/'+EX.soal.length;
+  var m=document.getElementById('emb');if(m)m.textContent=(i+1)+'/'+EX.soal.length;
+  ic();
 };
 
 /* MENJODOHKAN */
@@ -366,9 +498,51 @@ EX._rO=function(q){if(!EX.oS[q.id])EX.oS[q.id]=[];var items=(q.opsi_a||'').split
 EX.oA=function(qid,idx){EX.oS[qid].push(idx);EX.answers[qid]=EX.oS[qid].join('|');EX.rn();var b=document.getElementById('ob_'+qid);if(b)b.innerHTML=EX._rO(EX.soal.find(function(x){return x.id===qid}));ic()};
 EX.oR=function(qid,pos){EX.oS[qid].splice(pos,1);EX.answers[qid]=EX.oS[qid].join('|');EX.rn();var b=document.getElementById('ob_'+qid);if(b)b.innerHTML=EX._rO(EX.soal.find(function(x){return x.id===qid}));ic()};
 
-EX.an=function(qid,val){EX.answers[qid]=val;EX.rn();EX.rq(EX.cur)};
+/* Klik jawaban: update DOM langsung untuk PG/BS, TANPA rebuild gambar */
+EX.an=function(qid,val){
+  EX.answers[qid]=val;
+  EX.rn();
+  var q=EX.soal[EX.cur];
+
+  if(q.jenis==='pg'){
+    /* Cari semua tombol opsi, update CSS class saja */
+    var allBtns=document.querySelectorAll('[data-pgidx]');
+    allBtns.forEach(function(btn){
+      var idx=parseInt(btn.dataset.pgidx);
+      var isSelected=(btn.dataset.pgval===val);
+      var ltr=document.getElementById('pgltr_'+idx);
+      if(isSelected){
+        btn.className='w-full text-left flex items-center gap-3 p-4 rounded-xl transition bg-purple-500/30 border border-purple-500';
+        if(ltr) ltr.className='w-9 h-9 rounded-lg bg-purple-500 text-white flex items-center justify-center text-sm font-bold shrink-0';
+      }else{
+        btn.className='w-full text-left flex items-center gap-3 p-4 rounded-xl transition bg-white/5 border border-white/10 hover:border-purple-500/50';
+        if(ltr) ltr.className='w-9 h-9 rounded-lg bg-white/10 text-gray-400 flex items-center justify-center text-sm font-bold shrink-0';
+      }
+    });
+  }else if(q.jenis==='bs'){
+    /* Update 2 tombol Benar/Salah */
+    var bBtn=document.getElementById('bs_benar');
+    var sBtn=document.getElementById('bs_salah');
+    if(bBtn) bBtn.className='flex-1 p-4 rounded-xl text-center font-semibold transition '+(val==='Benar'?'bg-green-500/30 border-2 border-green-500':'bg-white/5 border-2 border-white/10 hover:border-green-500/50');
+    if(sBtn) sBtn.className='flex-1 p-4 rounded-xl text-center font-semibold transition '+(val==='Salah'?'bg-red-500/30 border-2 border-red-500':'bg-white/5 border-2 border-white/10 hover:border-red-500/50');
+  }else{
+    /* Essay, short, menjodohkan, menyusun: tidak perlu update visual */
+  }
+};
 EX.at=function(qid,val){EX.answers[qid]=val;EX.rn()};
-EX.tr=function(i){EX.ragu[i]=!EX.ragu[i];EX.rn();EX.rq(EX.cur)};
+EX.tr=function(i){
+  EX.ragu[i]=!EX.ragu[i];
+  EX.rn();
+  var q=EX.soal[i];
+  /* PG dan BS: update tombol ragu saja, jangan rebuild soal */
+  if(q.jenis==='pg'||q.jenis==='bs'){
+    var btn=document.getElementById('ragu_btn');
+    if(btn) btn.className='flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition '+(EX.ragu[i]?'bg-yellow-500/20 text-yellow-400 border border-yellow-500':'bg-white/5 text-gray-400 border border-white/10 hover:border-yellow-500/50');
+  }else{
+    /* Jenis lain: perlu rebuild */
+    EX.rq(i);
+  }
+};
 EX.tm=function(){EX.timer=setInterval(function(){if(EX.paused)return;EX.tl--;if(EX.tl<=0){clearInterval(EX.timer);EX.cf();return}var h=Math.floor(EX.tl/3600),m=Math.floor((EX.tl%3600)/60),s=EX.tl%60;var el=document.getElementById('etm');if(el)el.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')},1000)};
 EX.cf=function(){var ans=Object.keys(EX.answers).filter(function(k){return EX.answers[k]!==''&&EX.answers[k]!==undefined}).length,tot=EX.soal.length,un=tot-ans;var md=document.createElement('div');md.id='scf';md.className='fixed inset-0 z-[160] flex items-center justify-center mo';md.innerHTML='<div class="gs rounded-2xl p-8 w-full max-w-md mx-4 text-center asu"><div class="w-16 h-16 rounded-full bg-yellow-500/20 flex items-center justify-center mx-auto mb-4"><i data-lucide="alert-triangle" class="w-8 h-8 text-yellow-400"></i></div><h3 class="text-xl font-bold mb-2">Kirim?</h3><p class="text-lg font-semibold">'+ans+'/'+tot+' dijawab</p>'+(un>0?'<p class="text-red-400 text-sm mt-2">'+un+' belum dijawab!</p>':'<p class="text-green-400 text-sm mt-2">Semua dijawab</p>')+'<div class="flex gap-3 mt-6"><button onclick="document.getElementById(\'scf\').remove()" class="flex-1 glass px-4 py-3 rounded-xl text-sm font-semibold">Kembali</button><button onclick="EX.ds()" class="flex-1 bg-green-600 hover:bg-green-700 px-4 py-3 rounded-xl text-sm font-semibold">Kirim</button></div></div>';document.body.appendChild(md);ic()};
 
