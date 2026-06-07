@@ -2107,6 +2107,7 @@ se.style.display = 'flex';
 document.getElementById('et').textContent = EX.ujian.nama;
 document.getElementById('ei').textContent = EX.soal.length + ' soal';
 document.body.classList.add('exam-active');
+requestFS();
 EX.renderNav();
 EX.render();
 EX.startTimer();
@@ -2134,7 +2135,7 @@ var h = '<div class="fi">';
 /* Header soal */
 h += '<div class="flex items-center gap-3 mb-4">';
 h += '<span class="text-sm font-bold text-purple-400">Soal ' + (i + 1) + '</span>';
-if (EX.ragu[q.id]) h += '<span class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full">Ragu</span>';
+h += '<span id="ragu_badge" class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full" style="display:' + (EX.ragu[q.id] ? '' : 'none') + '">Ragu</span>';
 h += '<span class="text-xs text-gray-500">' + (q.skor_max || 1) + ' poin</span></div>';
 /* Teks soal */
 h += '<div class="text-base leading-relaxed mb-6">' + rT(q.teks, q.gambar) + '</div>';
@@ -2152,7 +2153,7 @@ h += '<div class="space-y-3">';
 opts.forEach(function(o, oi) {
 var lb = lbArr[oi];
 var isSel = (sel === lb);
-h += '<div onclick="EX.selO(\'' + q.id + '\',\'' + lb + '\')" class="oc flex items-start gap-3 p-4 rounded-xl border-2 '
+h += '<div onclick="EX.selO(\'' + q.id + '\',\'' + lb + '\',this)" class="oc flex items-start gap-3 p-4 rounded-xl border-2 '
 + (isSel ? 'border-purple-500 bg-purple-500/15' : 'border-white/10 bg-white/5 hover:border-purple-500/50') + '">'
 + '<span class="w-8 h-8 rounded-lg ' + (isSel ? 'bg-purple-500 text-white' : 'bg-white/10 text-gray-400')
 + ' flex items-center justify-center text-sm font-bold shrink-0">' + lb + '</span>'
@@ -2164,7 +2165,7 @@ var sel = EX.answers[q.id] || '';
 ['Benar', 'Salah'].forEach(function(o) {
 var isSel = (sel === o);
 var cl = o === 'Benar' ? 'green' : 'red';
-h += '<div onclick="EX.selO(\'' + q.id + '\',\'' + o + '\')" class="oc mb-3 p-4 rounded-xl border-2 '
+h += '<div onclick="EX.selO(\'' + q.id + '\',\'' + o + '\',this)" class="oc mb-3 p-4 rounded-xl border-2 '
 + (isSel ? 'border-' + cl + '-500 bg-' + cl + '-500/15' : 'border-white/10 bg-white/5 hover:border-' + cl + '-500/50')
 + ' text-center font-semibold text-sm '
 + (isSel ? 'text-' + cl + '-300' : 'text-gray-300') + '">' + o + '</div>';
@@ -2279,7 +2280,7 @@ h += '</div></div>';
 }
 /* Footer: tombol ragu & navigasi */
 h += '<div class="flex items-center justify-between mt-8 pt-4 border-t border-white/10">';
-h += '<button onclick="EX.tgR(\'' + q.id + '\')" class="flex items-center gap-2 text-sm '
+h += '<button id="ragu_btn" onclick="EX.tgR(\'' + q.id + '\')" class="flex items-center gap-2 text-sm '
 + (EX.ragu[q.id] ? 'text-yellow-400' : 'text-gray-400 hover:text-yellow-400') + ' transition">'
 + '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 017 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 01-2 2h-4a2 2 0 01-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 017-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>'
 + 'Tandai Ragu</button>';
@@ -2292,21 +2293,43 @@ eq.scrollTop = 0;
 ic();
 };
 /* ---------- Aksi Exam ---------- */
-EX.selO = function(qid, ans) { EX.answers[qid] = ans; EX.render(); EX.renderNav(); };
-EX.tgR = function(qid) { EX.ragu[qid] = !EX.ragu[qid]; EX.render(); EX.renderNav(); };
+EX.selO = function(qid, ans, el) {
+  EX.answers[qid] = ans;
+  var q = EX.soal[EX.cur];
+  if ((q.jenis === 'pg' || q.jenis === 'bs') && el) {
+    var items = el.parentElement.querySelectorAll('.oc');
+    items.forEach(function(s) {
+      s.classList.remove('border-purple-500','bg-purple-500/15','border-green-500','bg-green-500/15','border-red-500','bg-red-500/15','text-green-300','text-red-300');
+      s.classList.add('border-white/10','bg-white/5','text-gray-300');
+      var dot = s.querySelector('span:first-child');
+      if (dot) { dot.classList.remove('bg-purple-500','text-white','bg-green-500','bg-red-500'); dot.classList.add('bg-white/10','text-gray-400'); }
+    });
+    if (q.jenis === 'pg') {
+      el.classList.remove('border-white/10','bg-white/5');
+      el.classList.add('border-purple-500','bg-purple-500/15');
+      var dot = el.querySelector('span:first-child');
+      if (dot) { dot.classList.remove('bg-white/10','text-gray-400'); dot.classList.add('bg-purple-500','text-white'); }
+    } else {
+      var c = ans === 'Benar' ? 'green' : 'red';
+      el.classList.remove('border-white/10','bg-white/5','text-gray-300');
+      el.classList.add('border-'+c+'-500','bg-'+c+'-500/15','text-'+c+'-300');
+    }
+  } else { EX.render(); }
+  EX.renderNav();
+};
+EX.tgR = function(qid) {
+  EX.ragu[qid] = !EX.ragu[qid];
+  var btn = document.getElementById('ragu_btn');
+  var badge = document.getElementById('ragu_badge');
+  if (btn) {
+    if (EX.ragu[qid]) { btn.classList.add('text-yellow-400'); btn.classList.remove('text-gray-400'); }
+    else { btn.classList.remove('text-yellow-400'); btn.classList.add('text-gray-400'); }
+  }
+  if (badge) badge.style.display = EX.ragu[qid] ? '' : 'none';
+  EX.renderNav();
+};
 EX.pr = function() { if (EX.cur > 0) { EX.cur--; EX.render(); EX.renderNav(); } };
 EX.nx = function() { if (EX.cur < EX.soal.length - 1) { EX.cur++; EX.render(); EX.renderNav(); } };
-EX.go = function(i) { EX.cur = i; EX.render(); EX.renderNav(); };
-EX.tgSB = function() { var sb = document.getElementById('exam_sb'); if (sb) sb.classList.toggle('es'); };
-EX.mkPair = function(qid, li, ri) {
-if (ri === '') return;
-var cur = EX.answers[qid] || '';
-var pairs = cur ? cur.split('|').filter(Boolean) : [];
-pairs = pairs.filter(function(p) { return parseInt(p.split(',')[0]) !== li; });
-pairs.push(li + ',' + ri);
-EX.answers[qid] = pairs.join('|');
-EX.render(); EX.renderNav();
-};
 EX.unPair = function(qid, li) {
 var cur = EX.answers[qid] || '';
 var pairs = cur ? cur.split('|').filter(Boolean) : [];
@@ -2354,11 +2377,14 @@ var msg = 'Yakin ingin mengumpulkan?';
 if (unanswered.length) msg += '\n' + unanswered.length + ' soal belum dijawab.';
 if (raguC) msg += '\n' + raguC + ' soal ditandai ragu.';
 if (!confirm(msg)) return;
+exitFS();
 EX.submit();
 };
 EX.submit = function() {
 if (EX.timer) clearInterval(EX.timer);
 cAC();
+cBU();
+exitFS();
 document.body.classList.remove('exam-active');
 var eq = document.getElementById('eq');
 if (eq) eq.innerHTML = ldH();
@@ -2401,89 +2427,128 @@ if (eq) eq.innerHTML = '<div class="gs rounded-xl p-8 text-center">'
 /* ========================================================================
 ANTI-CHEAT SYSTEM
 ======================================================================== */
+function requestFS(){
+  var el=document.documentElement;
+  if(el.requestFullscreen) el.requestFullscreen();
+  else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if(el.mozRequestFullScreen) el.mozRequestFullScreen();
+}
+function exitFS(){
+  try{if(document.exitFullscreen) document.exitFullscreen();
+  else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+  else if(document.mozCancelFullScreen) document.mozCancelFullScreen();}catch(e){}
+}
+var _buHandler=null;
+function sBU(){
+  _buHandler=function(e){e.preventDefault();e.returnValue='Ujian sedang berlangsung!';return e.returnValue;};
+  window.addEventListener('beforeunload',_buHandler);
+}
+function cBU(){
+  if(_buHandler){window.removeEventListener('beforeunload',_buHandler);_buHandler=null;}
+}
 var _blurCooldown = false;
-function sAC() {
-cAC();
-document.addEventListener('visibilitychange', _vcH);
-document.addEventListener('keydown', _vcK);
-document.addEventListener('contextmenu', _vcCM);
-window.addEventListener('blur', _vcB);
+var _gracePeriod = false;
+function sAC(){
+  cAC();
+  document.addEventListener('visibilitychange', _vcH);
+  document.addEventListener('keydown', _vcK);
+  document.addEventListener('contextmenu', _vcCM);
+  window.addEventListener('blur', _vcB);
+  sBU();
 }
-function cAC() {
-document.removeEventListener('visibilitychange', _vcH);
-document.removeEventListener('keydown', _vcK);
-document.removeEventListener('contextmenu', _vcCM);
-window.removeEventListener('blur', _vcB);
+function cAC(){
+  document.removeEventListener('visibilitychange', _vcH);
+  document.removeEventListener('keydown', _vcK);
+  document.removeEventListener('contextmenu', _vcCM);
+  window.removeEventListener('blur', _vcB);
+  cBU();
 }
-/* Deteksi pindah tab */
-function _vcH() {
-if (!exA()) return;
-if (document.hidden) {
-EX.vc++;
-EX.viols.push({ type: 'tab_switch', time: new Date().toISOString() });
-_pEx('Terdeteksi pindah tab!');
-G('logPelanggaran', {
-siswa_id: U.id, ujian_id: EX.ujian ? EX.ujian.id : '',
-jenis: 'pindah_tab', token: EX.token
-}).catch(function() {});
+function _vcH(){
+  if(!exA()||EX.paused||_gracePeriod) return;
+  if(document.hidden){
+    EX.vc++;
+    EX.viols.push({type:'tab_switch',time:new Date().toISOString()});
+    _pEx('Terdeteksi pindah tab!');
+    G('logPelanggaran',{siswa_id:U.id,ujian_id:EX.ujian?EX.ujian.id:'',jenis:'pindah_tab',token:EX.token}).catch(function(){});
+  }
 }
+function _vcK(e){
+  if(!exA()) return;
+  if(e.key==='F5'||((e.ctrlKey||e.metaKey)&&e.key==='r')||((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==='R'||e.key==='r'))){
+    e.preventDefault();e.stopPropagation();return;
+  }
+  if(e.key==='PrintScreen'){
+    e.preventDefault();
+    EX.vc++;
+    EX.viols.push({type:'screenshot',time:new Date().toISOString()});
+    _pEx('Terdeteksi screenshot!');
+    G('logPelanggaran',{siswa_id:U.id,ujian_id:EX.ujian?EX.ujian.id:'',jenis:'screenshot',token:EX.token}).catch(function(){});
+    return;
+  }
+  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&['I','i','J','j','C','c'].indexOf(e.key)!==-1){
+    e.preventDefault();
+    EX.vc++;
+    EX.viols.push({type:'devtools',time:new Date().toISOString()});
+    _pEx('Dev tools terdeteksi!');
+    G('logPelanggaran',{siswa_id:U.id,ujian_id:EX.ujian?EX.ujian.id:'',jenis:'devtools',token:EX.token}).catch(function(){});
+    return;
+  }
+  if((e.ctrlKey||e.metaKey)&&['u','p','s'].indexOf(e.key)!==-1){
+    e.preventDefault();return;
+  }
+  if(e.key==='F12'){
+    e.preventDefault();
+    EX.vc++;
+    EX.viols.push({type:'devtools',time:new Date().toISOString()});
+    _pEx('Dev tools terdeteksi!');
+    G('logPelanggaran',{siswa_id:U.id,ujian_id:EX.ujian?EX.ujian.id:'',jenis:'devtools',token:EX.token}).catch(function(){});
+  }
 }
-/* Deteksi keyboard (screenshot, devtools, ctrl+u/p/s) */
-function _vcK(e) {
-if (!exA()) return;
-/* PrintScreen */
-if (e.key === 'PrintScreen') {
-e.preventDefault();
-EX.vc++;
-EX.viols.push({ type: 'screenshot', time: new Date().toISOString() });
-_pEx('Terdeteksi screenshot!');
-G('logPelanggaran', {
-siswa_id: U.id, ujian_id: EX.ujian ? EX.ujian.id : '',
-jenis: 'screenshot', token: EX.token
-}).catch(function() {});
-return;
+function _vcCM(e){if(exA()) e.preventDefault();}
+function _vcB(){
+  if(!exA()||_blurCooldown||_gracePeriod) return;
+  _blurCooldown=true;
+  setTimeout(function(){_blurCooldown=false;},3000);
+  EX.vc++;
+  EX.viols.push({type:'window_blur',time:new Date().toISOString()});
+  _pEx('Keluar jendela terdeteksi!');
 }
-/* Ctrl+Shift+I/J/C (devtools) */
-if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].indexOf(e.key) !== -1) {
-e.preventDefault();
-EX.vc++;
-EX.viols.push({ type: 'devtools', time: new Date().toISOString() });
-_pEx('Dev tools terdeteksi!');
-G('logPelanggaran', {
-siswa_id: U.id, ujian_id: EX.ujian ? EX.ujian.id : '',
-jenis: 'devtools', token: EX.token
-}).catch(function() {});
-return;
-}
-/* Ctrl+U (view source), Ctrl+P (print), Ctrl+S (save) */
-if ((e.ctrlKey || e.metaKey) && ['u', 'p', 's'].indexOf(e.key) !== -1) {
-e.preventDefault();
-return;
-}
-/* F12 */
-if (e.key === 'F12') {
-e.preventDefault();
-EX.vc++;
-EX.viols.push({ type: 'devtools', time: new Date().toISOString() });
-_pEx('Dev tools terdeteksi!');
-G('logPelanggaran', {
-siswa_id: U.id, ujian_id: EX.ujian ? EX.ujian.id : '',
-jenis: 'devtools', token: EX.token
-}).catch(function() {});
-}
-}
-/* Blokir klik kanan */
-function _vcCM(e) {
-if (exA()) e.preventDefault();
-}
-/* FIX: Deteksi blur jendela dengan cooldown 1 detik agar tidak terlalu sensitif */
-function _vcB() {
-if (!exA() || _blurCooldown) return;
-_blurCooldown = true;
-setTimeout(function() { _blurCooldown = false; }, 1000);
-EX.vc++;
-EX.viols.push({ type: 'window_blur', time: new Date().toISOString() });
-_pEx('Keluar jendela terdeteksi!');
+function _pEx(reason){
+  if(EX.paused||_gracePeriod) return;
+  EX.paused=true;
+  var po=document.getElementById('po');
+  po.classList.remove('hidden');
+  po.style.display='flex';
+  document.getElementById('pr').textContent=reason;
+  var cd=10;
+  document.getElementById('pc').textContent=cd;
+  var ci=setInterval(function(){
+    cd--;
+    document.getElementById('pc').textContent=cd;
+    if(cd<=0){
+      clearInterval(ci);
+      po.classList.add('hidden');
+      po.style.display='none';
+      EX.paused=false;
+      _gracePeriod=true;
+      setTimeout(function(){_gracePeriod=false;},5000);
+      if(EX.vc>=5){
+        if(EX.timer) clearInterval(EX.timer);
+        cAC();
+        cBU();
+        exitFS();
+        document.body.classList.remove('exam-active');
+        var eq=document.getElementById('eq');
+        if(eq) eq.innerHTML='<div class="gs rounded-xl p-8 text-center">'
+          +'<i data-lucide="shield-alert" class="w-16 h-16 text-red-400 mx-auto mb-4"></i>'
+          +'<h2 class="text-2xl font-bold text-red-400 mb-2">Ujian Dihentikan</h2>'
+          +'<p class="text-gray-400 mb-6">Pelanggaran anti-cheat mencapai 5 kali</p>'
+          +'<button onclick="AU.out()" class="bp px-6 py-3 rounded-xl font-semibold">Kembali</button></div>';
+        ic();
+        G('forceEndExam',{siswa_id:U.id,ujian_id:EX.ujian?EX.ujian.id:'',token:EX.token,pelanggaran:EX.vc}).catch(function(){});
+      }
+    }
+  },1000);
 }
 /* Pause overlay saat pelanggaran */
 function _pEx(reason) {
