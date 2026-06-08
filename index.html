@@ -270,6 +270,76 @@ SMARTCBT PRO - COMPLETE CLIENT ENGINE (PATCHED & OPTIMIZED)
 // GANTI URL INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA
 const API_URL = 'https://script.google.com/macros/s/AKfycbzce4VcikMl98HS1P_cz2F04hw16k3uYVVwS_uz8oKMnRHt7yLAufJr8UxMgP6eea9s/exec';
 
+
+/* ---------- LAYOUT MANAGER (FIX TUMPUKAN HALAMAN) ---------- */
+const LM = {
+  layouts: ['sl', 'sd', 'se'],
+  hideAll() {
+    this.layouts.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('hidden');
+        el.classList.remove('flex');
+        el.style.display = '';
+      }
+    });
+    ['ml', 'mt', 'mg', 'po'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('hidden');
+        el.classList.remove('flex');
+        el.style.display = '';
+      }
+    });
+    const ds = document.querySelector('.ds');
+    const dov = document.querySelector('.dov');
+    if (ds) ds.classList.remove('open');
+    if (dov) dov.classList.remove('active');
+  },
+  show(layoutId, asFlex) {
+    this.hideAll();
+    const el = document.getElementById(layoutId);
+    if (el) {
+      el.classList.remove('hidden');
+      if (asFlex) el.classList.add('flex');
+      el.style.display = '';
+    }
+  },
+  showModal(modalId) {
+    const el = document.getElementById(modalId);
+    if (el) {
+      el.classList.remove('hidden');
+      el.classList.add('flex');
+      el.style.display = '';
+    }
+  },
+  hideModal(modalId) {
+    const el = document.getElementById(modalId);
+    if (el) {
+      el.classList.add('hidden');
+      el.classList.remove('flex');
+      el.style.display = '';
+    }
+  },
+  showOverlay(overlayId) {
+    const el = document.getElementById(overlayId);
+    if (el) {
+      el.classList.remove('hidden');
+      el.style.display = 'flex';
+    }
+  },
+  hideOverlay(overlayId) {
+    const el = document.getElementById(overlayId);
+    if (el) {
+      el.classList.add('hidden');
+      el.style.display = '';
+    }
+  }
+};
+
+function shM(id) { LM.showModal(id); }
+function hiM(id) { LM.hideModal(id); }    
+    
 /* ---------- API Helper ---------- */
 function G(action, params = {}) {
     return new Promise((ok, no) => {
@@ -430,8 +500,7 @@ function ldH() {
   return `<div class="flex items-center justify-center py-12"><div class="w-8 h-8 border-3 border-purple-500 border-t-transparent rounded-full sp"></div><span class="ml-3 text-gray-400 text-sm">Memuat...</span></div>`;
 }
 
-function shM(id) { const el = document.getElementById(id); if(el) { el.classList.remove('hidden'); el.classList.add('flex'); } }
-function hiM(id) { const el = document.getElementById(id); if(el) { el.classList.add('hidden'); el.classList.remove('flex'); } }
+
 function ic() { try { if (typeof lucide !== 'undefined') lucide.createIcons(); } catch(e) {} }
 function tSB() { document.querySelector('.ds').classList.toggle('open'); document.querySelector('.dov').classList.toggle('active'); }
 function exA() { const se = document.getElementById('se'); return se && !se.classList.contains('hidden'); }
@@ -553,23 +622,23 @@ const AU = {
       });
     return false;
   },
-  out() {
+    out() {
     U = null;
     if (EX.timer) clearInterval(EX.timer);
     cAC(); flushCache();
-    Object.assign(EX, { ujian: null, soal: [], answers: {}, ragu: {}, cur: 0, tl: 0, timer: null, paused: false, viols: [], vc: 0, _submitted: false });
-    ['sd', 'se'].forEach(id => { const el = document.getElementById(id); if(el) { el.classList.add('hidden'); el.classList.remove('flex'); } });
-    hiM('ml'); hiM('mt'); hiM('mg');
-    document.getElementById('po').style.display = 'none';
+    Object.assign(EX, { ujian: null, soal: [], answers: {}, ragu: {}, cur: 0, tl: 0, timer: null, paused: false, viols: [], vc: 0, _submitted: false, mS: {}, oS: {}, mapJawaban: {}, mapKanan: {}, mapSusun: {} });
+    LM.hideAll();
     document.body.classList.remove('exam-active');
-    const sl = document.getElementById('sl'); sl.classList.remove('hidden');
+    const sl = document.getElementById('sl');
+    if (sl) { sl.classList.remove('hidden'); sl.style.display = ''; }
     ic();
   }
 };
 
 function goDash() {
-  hiM('sl'); hiM('se'); hiM('ml');
-  const dash = document.getElementById('sd'); dash.classList.remove('hidden'); dash.style.display = 'flex';
+  LM.hideAll();
+  const dash = document.getElementById('sd');
+  if (dash) { dash.classList.remove('hidden'); dash.style.display = 'flex'; }
   const nav = document.getElementById('sn');
   const items = MN[U.role] || [];
   nav.innerHTML = items.map(m => `<button onclick="lv('${m.v}')" class="si w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-300 hover:text-white" data-v="${m.v}"><i data-lucide="${m.i}" class="w-4 h-4"></i>${m.l}</button>`).join('');
@@ -1056,15 +1125,16 @@ const DH = {
           </div>
           <div class="card-body">
             <div class="card-photo">FOTO<br>3x4</div>
-            <div class="card-info">
+                        <div class="card-info">
               <p><strong>Nama</strong>: ${esc(s.nama)}</p>
               <p><strong>NIS</strong>: ${esc(s.nis)}</p>
               <p><strong>Kelas</strong>: ${esc(s.kelas)}</p>
-              <p><strong>Mapel</strong>: ${esc(ujian.mapel_nama)}</p>
+              <p><strong>Username</strong>: ${esc(s.username || '-')}</p>
+              <p><strong>Password</strong>: ${esc(s.password || '-')}</p>
             </div>
           </div>
           <div class="card-footer">
-            <p>Tanggal: ${new Date().toLocaleDateString('id-ID')}</p>
+            <p>${esc(ujian.nama)}</p>
           </div>
         </div>`).join('')}</div>`;
       
@@ -1750,7 +1820,7 @@ EX.etk = function() {
     .then(r => {
       btn.disabled = false; btn.textContent = 'Mulai';
       if (!r.s) { err.textContent = r.error; err.classList.remove('hidden'); return; }
-      EX.token = tk; EX.start(r.d);
+            EX.token = tk; hiM('mt'); EX.start(r.d);
     }).catch(e => { btn.disabled = false; btn.textContent = 'Mulai'; err.textContent = e; err.classList.remove('hidden'); });
 };
 
@@ -1791,9 +1861,8 @@ EX.start = function(data) {
     });
   }
 
-  document.getElementById('sl').style.display = 'none';
-  document.getElementById('sd').style.display = 'none';
-  const se = document.getElementById('se'); se.classList.remove('hidden'); se.style.display = 'flex';
+    LM.hideAll();
+  const se = document.getElementById('se'); if(se) { se.classList.remove('hidden'); se.style.display = 'flex'; }
   document.getElementById('et').textContent = EX.ujian.nama;
   document.getElementById('ei').textContent = `${EX.soal.length} soal`;
   document.body.classList.add('exam-active');
@@ -1951,8 +2020,9 @@ EX.cf = function() {
 EX.submit = function() {
   if (EX._submitted) return; // FIX: Cegah double submit
   EX._submitted = true;
-  if (EX.timer) clearInterval(EX.timer);
-  cAC(); document.body.classList.remove('exam-active');
+    if (EX.timer) clearInterval(EX.timer);
+  cAC(); LM.hideAll(); document.body.classList.remove('exam-active');
+  const se = document.getElementById('se'); if(se) { se.classList.remove('hidden'); se.style.display = 'flex'; }
   const eq = document.getElementById('eq'); if (eq) eq.innerHTML = ldH();
 
   // FIX: Terjemahkan jawaban yang diacak kembali ke format asli
@@ -2042,13 +2112,13 @@ function _vcB() {
 function _pEx(reason) {
   if (EX.paused) return;
   EX.paused = true;
-  const po = document.getElementById('po'); po.classList.remove('hidden'); po.style.display = 'flex';
+  LM.showOverlay('po');
   document.getElementById('pr').textContent = reason;
   let cd = 10; document.getElementById('pc').textContent = cd;
   const ci = setInterval(() => {
     cd--; document.getElementById('pc').textContent = cd;
     if (cd <= 0) {
-      clearInterval(ci); po.classList.add('hidden'); po.style.display = 'none'; EX.paused = false;
+      clearInterval(ci); LM.hideOverlay('po'); EX.paused = false;
       if (EX.vc >= 5) {
         clearInterval(EX.timer); cAC(); document.body.classList.remove('exam-active');
         const eq = document.getElementById('eq');
