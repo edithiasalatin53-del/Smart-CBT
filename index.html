@@ -268,7 +268,7 @@ SMARTCBT PRO - COMPLETE CLIENT ENGINE (PATCHED & OPTIMIZED)
 ======================================================================== */
 
 // GANTI URL INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA
-const API_URL = 'https://script.google.com/macros/s/AKfycbzce4VcikMl98HS1P_cz2F04hw16k3uYVVwS_uz8oKMnRHt7yLAufJr8UxMgP6eea9s/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyrFG4dLHDEqhU6U-EaQBSM7gWIYuGVZDkKnu7-Ct23w6eReFW2rlgh5fX3H1mHwZrG/exec';
 
 
 /* ---------- LAYOUT MANAGER (FIX TUMPUKAN HALAMAN) ---------- */
@@ -828,7 +828,10 @@ const DH = {
     const params = {};
     Array.from(form.elements).forEach(el => { if (el.name) params[el.name] = el.value; });
     if (id) params.id = id;
-    
+
+    // TAMBAHKAN INI UNTUK DEBUG
+    console.log('MENGIRIM:', id ? ('update' + sheetMap[view]) : ('add' + sheetMap[view]), params);  
+      
     G(id ? `update${sheetMap[view]}` : `add${sheetMap[view]}`, params)
       .then(r => { hiM('mg'); toast(r.m); flushCache(); lv(view); })
       .catch(er => toast(er, 'error'));
