@@ -89,7 +89,8 @@ body.exam-active textarea,body.exam-active input[type="text"]{user-select:text!i
   .card-header{border-bottom:1px solid #ccc!important;padding-bottom:4px!important;margin-bottom:4px!important;text-align:center!important}
   .card-title{font-size:10pt!important;font-weight:bold!important;text-transform:uppercase!important}
   .card-body{flex:1!important;display:flex!important;gap:8px!important}
-  .card-photo{width:2.5cm!important;height:3cm!important;border:1px solid #ccc!important;background:#eee!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:8pt!important;flex-shrink:0!important}
+  .card-photo{width:2.5cm!important;height:3cm!important;border:1px solid #ccc!important;background:#fff!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:8pt!important;flex-shrink:0!important;overflow:hidden!important}
+  .card-photo img{max-width:100%!important;max-height:100%!important;object-fit:contain!important}
   .card-info{flex:1!important;font-size:8.5pt!important;line-height:1.4!important}
   .card-info p{margin-bottom:1px!important}
   .card-info strong{display:inline-block!important;width:1.8cm!important;font-weight:bold!important}
@@ -455,9 +456,11 @@ function escJ(s) { return esc(s).replace(/'/g, '&#39;'); }
 function rT(t, img) {
   if (!t && !img) return '';
   let html = '';
-  if (t) {
+  if (t !== undefined && t !== null && t !== '') {
+    // PAKSA JADI STRING
+    const strT = String(t);
     const imgList = [];
-    const safe = esc(t).replace(/\[IMG:(.*?)\]/g, (m, u) => { imgList.push(u); return `%%IMG${imgList.length}%%`; });
+    const safe = esc(strT).replace(/\[IMG:(.*?)\]/g, (m, u) => { imgList.push(u); return `%%IMG${imgList.length}%%`; });
     let processed = safe;
     imgList.forEach((u, i) => {
       const src = esc(imgUrl(u));
@@ -472,10 +475,13 @@ function rT(t, img) {
 function rO(t, img) {
   if (!t && !img) return '';
   let html = '';
-  if (t) {
-    if (t.match(/\[IMG:/)) {
+  if (t !== undefined && t !== null && t !== '') {
+    // PAKSA JADI STRING AGAR .match TIDAK ERROR
+    const strT = String(t); 
+    
+    if (strT.match(/\[IMG:/)) {
       const imgList = [];
-      const safe = esc(t).replace(/\[IMG:(.*?)\]/g, (m, u) => { imgList.push(u); return `%%IMG${imgList.length}%%`; });
+      const safe = esc(strT).replace(/\[IMG:(.*?)\]/g, (m, u) => { imgList.push(u); return `%%IMG${imgList.length}%%`; });
       let processed = safe;
       imgList.forEach((u, i) => {
         const src = esc(imgUrl(u));
@@ -483,7 +489,7 @@ function rO(t, img) {
       });
       html += processed;
     } else {
-      html += esc(t);
+      html += esc(strT);
     }
   }
   if (img) html += `<img src="${esc(imgUrl(img))}" class="max-h-20 rounded inline-block mx-1 align-middle">`;
@@ -1057,7 +1063,7 @@ const DH = {
 
 
     
-  // ---------- KARTU PESERTA ----------
+  // ----------   // ---------- KARTU PESERTA ----------
   kartu() {
     const ct = document.getElementById('dc');
     document.getElementById('ds').textContent = 'Cetak kartu ujian peserta';
@@ -1066,27 +1072,37 @@ const DH = {
     G('getSiswa').then(r => {
       if (!r.s) { ct.innerHTML = `<p class="text-red-400">${esc(r.error)}</p>`; return; }
       
-      // DEBUG: Cek field apa saja yang dikembalikan oleh getSiswa
-      console.log('Data Siswa dari server:', r.d);
-      if (r.d && r.d.length > 0) {
-        console.log('Field tersedia:', Object.keys(r.d[0]));
-      }
-
       const siswa = r.d || [];
       DH._siswaData = siswa;
+      DH._barcodes = {}; // Inisialisasi penyimpanan barcode per kelas
 
-      // Kumpulkan daftar kelas unik
       const kelasSet = [...new Set(siswa.map(s => s.kelas).filter(Boolean))].sort();
 
       ct.innerHTML = `
         <div class="gs rounded-xl p-6 mb-4">
-          <div class="flex flex-wrap items-end gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="text-xs text-gray-400 block mb-1">Nama Ujian (Teks Bawah Header)</label>
+              <input type="text" id="kartu_exam_name" placeholder="cth: Ujian Tengah Semester Ganjil" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" oninput="DH.renderKartu()">
+            </div>
             <div>
               <label class="text-xs text-gray-400 block mb-1">Filter Kelas</label>
-              <select id="kartu_kelas" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" onchange="DH.renderKartu()">
+              <select id="kartu_kelas" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" onchange="DH.renderKartu()">
                 <option value="">Semua Kelas</option>
                 ${kelasSet.map(k => `<option value="${esc(k)}">Kelas ${esc(k)}</option>`).join('')}
               </select>
+            </div>
+          </div>
+          
+          <div class="flex flex-wrap items-end justify-between gap-4 mt-4 pt-4 border-t border-white/10">
+            <div>
+              <label class="text-xs text-gray-400 block mb-1">Upload Barcode (Untuk Kelas Terpilih)</label>
+              <div class="flex items-center gap-3">
+                <button onclick="DH.upBarcode()" class="glass px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-white/10 transition">
+                  <i data-lucide="upload" class="w-4 h-4"></i> Pilih Gambar Barcode
+                </button>
+                <div id="kartu_barcode_preview" class="text-xs text-gray-400 italic">Belum ada barcode</div>
+              </div>
             </div>
             <div class="flex gap-2">
               <button onclick="DH.printKartu()" class="bp px-6 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2">
@@ -1109,8 +1125,59 @@ const DH = {
     });
   },
 
+  upBarcode() {
+    const kelasFilter = document.getElementById('kartu_kelas')?.value || 'ALL';
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*';
+    inp.onchange = () => {
+      const file = inp.files[0];
+      if (!file) return;
+      if (file.size > 2000000) { toast('Maks 2MB', 'warning'); return; }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          if (w > 400) { h = h * 400 / w; w = 400; }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const base64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+          
+          toast('Mengupload barcode...', 'warning');
+          G('uploadImage', { data: base64, mimeType: 'image/jpeg', ext: 'jpg' })
+            .then(r => {
+              if (!r.s) { toast(r.error, 'error'); return; }
+              DH._barcodes[kelasFilter] = r.d.url;
+              DH.renderBarcodePreview();
+              DH.renderKartu();
+              toast('Barcode berhasil diupload');
+            }).catch(err => toast(err, 'error'));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+    inp.click();
+  },
+
+  renderBarcodePreview() {
+    const kelasFilter = document.getElementById('kartu_kelas')?.value || 'ALL';
+    const el = document.getElementById('kartu_barcode_preview');
+    if (!el) return;
+    
+    const url = DH._barcodes[kelasFilter];
+    if (url) {
+      el.innerHTML = `<img src="${esc(imgUrl(url))}" class="max-h-12 rounded inline-block align-middle"> <span class="text-green-400 ml-2">Terpasang</span>`;
+    } else {
+      el.innerHTML = 'Belum ada barcode';
+    }
+  },
+
   renderKartu() {
     const kelasFilter = document.getElementById('kartu_kelas')?.value || '';
+    const examName = document.getElementById('kartu_exam_name')?.value || 'SmartCBT Pro';
     let siswa = DH._siswaData || [];
     if (kelasFilter) siswa = siswa.filter(s => s.kelas === kelasFilter);
 
@@ -1126,36 +1193,43 @@ const DH = {
     }
 
     el.innerHTML = siswa.map(s => {
-      // FALLBACK: Jika tidak ada field username/password, gunakan NIS
-      const username = s.username || s.user || s.nis || '-';
-      const password = s.password || s.pass || s.pwd || s.nis || '-';
+      const username = s.username || s.nis || '-';
+      const password = s.password || s.nis || '-';
+      // Cek barcode per kelas siswa, jika tidak ada pakai barcode 'ALL'
+      const barcodeUrl = DH._barcodes[s.kelas] || DH._barcodes[''] || '';
+      const barcodeHTML = barcodeUrl ? `<img src="${esc(imgUrl(barcodeUrl))}" class="w-full h-full object-contain">` : 'Barcode';
 
       return `
         <div class="gs rounded-xl p-4 ch">
           <div class="text-center mb-3 pb-3 border-b border-white/10">
             <h3 class="font-bold text-sm uppercase tracking-wide">Kartu Peserta Ujian</h3>
-            <p class="text-xs text-gray-400">SmartCBT Pro</p>
+            <p class="text-xs text-gray-400">${esc(examName)}</p>
           </div>
-          <div class="space-y-1.5 text-sm">
-            <div class="flex justify-between">
-              <span class="text-gray-400">Nama</span>
-              <span class="font-semibold text-right">${esc(s.nama)}</span>
+          <div class="flex gap-4">
+            <div class="w-20 h-24 border border-white/10 rounded-lg flex items-center justify-center text-xs text-gray-500 overflow-hidden bg-white/5">
+              ${barcodeHTML}
             </div>
-            <div class="flex justify-between">
-              <span class="text-gray-400">NIS</span>
-              <span class="font-mono">${esc(s.nis)}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-400">Kelas</span>
-              <span>${esc(s.kelas)}</span>
-            </div>
-            <div class="flex justify-between items-center bg-purple-500/10 rounded-lg px-3 py-2 mt-2">
-              <span class="text-gray-400 text-xs">Username</span>
-              <span class="font-mono font-bold text-purple-300">${esc(username)}</span>
-            </div>
-            <div class="flex justify-between items-center bg-green-500/10 rounded-lg px-3 py-2">
-              <span class="text-gray-400 text-xs">Password</span>
-              <span class="font-mono font-bold text-green-300">${esc(password)}</span>
+            <div class="flex-1 space-y-1.5 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gray-400">Nama</span>
+                <span class="font-semibold text-right">${esc(s.nama)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">NIS</span>
+                <span class="font-mono">${esc(s.nis)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">Kelas</span>
+                <span>${esc(s.kelas)}</span>
+              </div>
+              <div class="flex justify-between items-center bg-purple-500/10 rounded-lg px-3 py-2 mt-2">
+                <span class="text-gray-400 text-xs">User</span>
+                <span class="font-mono font-bold text-purple-300">${esc(username)}</span>
+              </div>
+              <div class="flex justify-between items-center bg-green-500/10 rounded-lg px-3 py-2">
+                <span class="text-gray-400 text-xs">Pass</span>
+                <span class="font-mono font-bold text-green-300">${esc(password)}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1166,6 +1240,7 @@ const DH = {
 
   printKartu() {
     const kelasFilter = document.getElementById('kartu_kelas')?.value || '';
+    const examName = document.getElementById('kartu_exam_name')?.value || 'SmartCBT Pro';
     let siswa = DH._siswaData || [];
     if (kelasFilter) siswa = siswa.filter(s => s.kelas === kelasFilter);
 
@@ -1174,18 +1249,19 @@ const DH = {
     const printArea = document.getElementById('print-area');
     
     printArea.innerHTML = '<div class="card-grid">' + siswa.map(s => {
-      // FALLBACK: gunakan NIS jika username/password kosong
-      const username = s.username || s.user || s.nis || '-';
-      const password = s.password || s.pass || s.pwd || s.nis || '-';
+      const username = s.username || s.nis || '-';
+      const password = s.password || s.nis || '-';
+      const barcodeUrl = DH._barcodes[s.kelas] || DH._barcodes[''] || '';
+      const barcodeHTML = barcodeUrl ? `<img src="${esc(imgUrl(barcodeUrl))}" style="max-width:100%; max-height:100%; object-fit:contain;">` : 'Barcode';
 
       return `
         <div class="exam-card">
           <div class="card-header">
             <div class="card-title">Kartu Peserta Ujian</div>
-            <div style="font-size:7pt;color:#666">SmartCBT Pro</div>
+            <div style="font-size:7pt;color:#666">${esc(examName)}</div>
           </div>
           <div class="card-body">
-            <div class="card-photo">Foto</div>
+            <div class="card-photo">${barcodeHTML}</div>
             <div class="card-info">
               <p><strong>Nama</strong> ${esc(s.nama)}</p>
               <p><strong>NIS</strong> ${esc(s.nis)}</p>
@@ -1217,8 +1293,8 @@ const DH = {
       Nama: s.nama || '',
       NIS: s.nis || '',
       Kelas: s.kelas || '',
-      Username: s.username || s.user || s.nis || '',
-      Password: s.password || s.pass || s.pwd || s.nis || ''
+      Username: s.username || s.nis || '',
+      Password: s.password || s.nis || ''
     }));
 
     const ws = XLSX.utils.json_to_sheet(data);
