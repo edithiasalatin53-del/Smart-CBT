@@ -76,20 +76,24 @@ body.exam-active textarea,body.exam-active input[type="text"]{user-select:text!i
   *{font-family:"Plus Jakarta Sans",sans-serif;box-sizing:border-box;margin:0;padding:0;color:#111!important;background:#fff!important}
   .no-print{display:none!important}
   .print-area{display:block!important}
-  .card-grid{display:grid!important;grid-template-columns:repeat(2, 1fr)!important;gap:1cm!important;padding:1cm!important}
+  
+  #app > div:not(.print-area){display:none!important}
+  
+  .card-grid{display:grid!important;grid-template-columns:repeat(2, 1fr)!important;gap:0.5cm!important;padding:1cm!important}
+  
   .exam-card{
     width:9cm!important;height:6cm!important;border:2px solid #111!important;border-radius:8px!important;
-    padding:0.5cm!important;page-break-inside:avoid!important;display:flex!important;flex-direction:column!important;
+    padding:0.4cm!important;page-break-inside:avoid!important;display:flex!important;flex-direction:column!important;
     box-shadow:none!important;background:#fff!important
   }
-  .card-header{border-bottom:1px solid #ccc;padding-bottom:4px;margin-bottom:4px;text-align:center}
+  .card-header{border-bottom:1px solid #ccc!important;padding-bottom:4px!important;margin-bottom:4px!important;text-align:center!important}
   .card-title{font-size:10pt!important;font-weight:bold!important;text-transform:uppercase!important}
   .card-body{flex:1!important;display:flex!important;gap:8px!important}
-  .card-photo{width:2.5cm!important;height:3cm!important;border:1px solid #ccc!important;background:#eee!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:8pt!important}
-  .card-info{flex:1!important;font-size:9pt!important}
-  .card-info p{margin-bottom:2px!important}
-  .card-info strong{display:inline-block!important;width:2.5cm!important}
-  .card-footer{border-top:1px solid #ccc;padding-top:4px;margin-top:4px;font-size:8pt!important;text-align:center!important}
+  .card-photo{width:2.5cm!important;height:3cm!important;border:1px solid #ccc!important;background:#eee!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:8pt!important;flex-shrink:0!important}
+  .card-info{flex:1!important;font-size:8.5pt!important;line-height:1.4!important}
+  .card-info p{margin-bottom:1px!important}
+  .card-info strong{display:inline-block!important;width:1.8cm!important;font-weight:bold!important}
+  .card-footer{border-top:1px solid #ccc!important;padding-top:3px!important;margin-top:3px!important;font-size:7pt!important;text-align:center!important;color:#666!important}
 }
 </style>
 </head>
@@ -268,7 +272,7 @@ SMARTCBT PRO - COMPLETE CLIENT ENGINE (PATCHED & OPTIMIZED)
 ======================================================================== */
 
 // GANTI URL INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA
-const API_URL = 'https://script.google.com/macros/s/AKfycbyrFG4dLHDEqhU6U-EaQBSM7gWIYuGVZDkKnu7-Ct23w6eReFW2rlgh5fX3H1mHwZrG/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyWmmXant930RR8jINezx-hE-pFC2C5ZbwuI45IyvaR8RxswBxkHftKmgaWqaKSc-WD/exec';
 
 
 /* ---------- LAYOUT MANAGER (FIX TUMPUKAN HALAMAN) ---------- */
@@ -1053,103 +1057,174 @@ const DH = {
 
 
     
-  // ---------- FITUR BARU: CETAK KARTU PESERTA ----------
+  // ---------- KARTU PESERTA ----------
   kartu() {
     const ct = document.getElementById('dc');
-    ct.innerHTML = `<div class="gs rounded-2xl p-6 mb-6">
-      <h3 class="font-semibold mb-4">Cetak Kartu Peserta Ujian</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-        <div><label class="text-xs text-gray-400 block mb-1">Pilih Ujian</label><select id="kr_ujian" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500"></select></div>
-        <div><label class="text-xs text-gray-400 block mb-1">Pilih Kelas</label><select id="kr_kelas" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500"></select></div>
-        <div class="flex gap-2"><button onclick="DH.kartuPreview()" class="bp px-5 py-3 rounded-xl text-sm font-semibold flex-1">Preview & Cetak</button></div>
-      </div>
-    </div><div id="kr_ct"></div>`;
-    
-    Promise.all([G('getUjian', { role: U.role, userId: U.id, kelas: U.kelas }), G('getKelas')]).then(res => {
-      const ujian = res[0].d || [];
-      const kelas = res[1].d || [];
-      document.getElementById('kr_ujian').innerHTML = ujian.map(u => `<option value="${u.id}">${esc(u.nama)}</option>`).join('');
-      document.getElementById('kr_kelas').innerHTML = `<option value="">-- Semua Kelas --</option>` + kelas.map(k => `<option value="${esc(k.nama)}">${esc(k.nama)}</option>`).join('');
+    document.getElementById('ds').textContent = 'Cetak kartu ujian peserta';
+    ct.innerHTML = ldH();
+
+    G('getSiswa').then(r => {
+      if (!r.s) { ct.innerHTML = `<p class="text-red-400">${esc(r.error)}</p>`; return; }
+      
+      // DEBUG: Cek field apa saja yang dikembalikan oleh getSiswa
+      console.log('Data Siswa dari server:', r.d);
+      if (r.d && r.d.length > 0) {
+        console.log('Field tersedia:', Object.keys(r.d[0]));
+      }
+
+      const siswa = r.d || [];
+      DH._siswaData = siswa;
+
+      // Kumpulkan daftar kelas unik
+      const kelasSet = [...new Set(siswa.map(s => s.kelas).filter(Boolean))].sort();
+
+      ct.innerHTML = `
+        <div class="gs rounded-xl p-6 mb-4">
+          <div class="flex flex-wrap items-end gap-4">
+            <div>
+              <label class="text-xs text-gray-400 block mb-1">Filter Kelas</label>
+              <select id="kartu_kelas" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" onchange="DH.renderKartu()">
+                <option value="">Semua Kelas</option>
+                ${kelasSet.map(k => `<option value="${esc(k)}">Kelas ${esc(k)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="DH.printKartu()" class="bp px-6 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2">
+                <i data-lucide="printer" class="w-4 h-4"></i> Cetak Kartu
+              </button>
+              <button onclick="DH.exportKartu()" class="glass px-6 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-white/10 transition">
+                <i data-lucide="download" class="w-4 h-4"></i> Export Excel
+              </button>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-3">Total: <span id="kartu_count">${siswa.length}</span> siswa</p>
+        </div>
+        <div id="kartu_list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      `;
+
+      DH.renderKartu();
       ic();
+    }).catch(err => {
+      ct.innerHTML = `<p class="text-red-400">Error: ${esc(err)}</p>`;
     });
   },
-    kartuPreview() {
-    const ujianId = document.getElementById('kr_ujian').value;
-    const kelasFilter = document.getElementById('kr_kelas').value;
-    const ct = document.getElementById('kr_ct');
 
-    if (!ujianId) { toast('Pilih ujian terlebih dahulu', 'warning'); return; }
+  renderKartu() {
+    const kelasFilter = document.getElementById('kartu_kelas')?.value || '';
+    let siswa = DH._siswaData || [];
+    if (kelasFilter) siswa = siswa.filter(s => s.kelas === kelasFilter);
 
-    ct.innerHTML = ldH(); // Tampilkan loading
-    console.log("Memuat data untuk Ujian ID:", ujianId, "Filter Kelas:", kelasFilter);
+    const countEl = document.getElementById('kartu_count');
+    if (countEl) countEl.textContent = siswa.length;
 
-    Promise.all([
-      G('getUjian', { role: U.role, userId: U.id, kelas: U.kelas || '' }),
-      G('getSiswa')
-    ]).then(res => {
-      console.log("Respon Ujian:", res[0]);
-      console.log("Respon Siswa:", res[1]);
+    const el = document.getElementById('kartu_list');
+    if (!el) return;
 
-      if (!res[0].s || !res[1].s) {
-        ct.innerHTML = `<div class="gs rounded-xl p-8 text-center text-red-400">Gagal memuat data: ${res[0].error || res[1].error}</div>`;
-        return;
-      }
+    if (!siswa.length) {
+      el.innerHTML = '<div class="gs rounded-xl p-8 text-center text-gray-400 col-span-full">Tidak ada data siswa</div>';
+      return;
+    }
 
-      const ujian = (res[0].d || []).find(u => u.id === ujianId);
-      let siswaList = res[1].d || [];
+    el.innerHTML = siswa.map(s => {
+      // FALLBACK: Jika tidak ada field username/password, gunakan NIS
+      const username = s.username || s.user || s.nis || '-';
+      const password = s.password || s.pass || s.pwd || s.nis || '-';
 
-      // Filter siswa berdasarkan kelas (dengan trim() untuk menghapus spasi tersembunyi)
-      if (kelasFilter) {
-        siswaList = siswaList.filter(s => String(s.kelas).trim() === String(kelasFilter).trim());
-      }
+      return `
+        <div class="gs rounded-xl p-4 ch">
+          <div class="text-center mb-3 pb-3 border-b border-white/10">
+            <h3 class="font-bold text-sm uppercase tracking-wide">Kartu Peserta Ujian</h3>
+            <p class="text-xs text-gray-400">SmartCBT Pro</p>
+          </div>
+          <div class="space-y-1.5 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-400">Nama</span>
+              <span class="font-semibold text-right">${esc(s.nama)}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">NIS</span>
+              <span class="font-mono">${esc(s.nis)}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Kelas</span>
+              <span>${esc(s.kelas)}</span>
+            </div>
+            <div class="flex justify-between items-center bg-purple-500/10 rounded-lg px-3 py-2 mt-2">
+              <span class="text-gray-400 text-xs">Username</span>
+              <span class="font-mono font-bold text-purple-300">${esc(username)}</span>
+            </div>
+            <div class="flex justify-between items-center bg-green-500/10 rounded-lg px-3 py-2">
+              <span class="text-gray-400 text-xs">Password</span>
+              <span class="font-mono font-bold text-green-300">${esc(password)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    ic();
+  },
 
-      console.log("Jumlah siswa setelah difilter:", siswaList.length);
+  printKartu() {
+    const kelasFilter = document.getElementById('kartu_kelas')?.value || '';
+    let siswa = DH._siswaData || [];
+    if (kelasFilter) siswa = siswa.filter(s => s.kelas === kelasFilter);
 
-      if (!ujian) {
-        ct.innerHTML = `<div class="gs rounded-xl p-8 text-center text-red-400">Data ujian tidak ditemukan</div>`;
-        return;
-      }
+    if (!siswa.length) { toast('Tidak ada data untuk dicetak', 'warning'); return; }
 
-      if (!siswaList.length) {
-        ct.innerHTML = `<div class="gs rounded-xl p-8 text-center text-gray-400">
-          <p class="mb-2 font-semibold">Tidak ada data siswa ditemukan.</p>
-          <p class="text-xs">Pastikan:<br>1. Anda sudah menambahkan siswa di menu 'Siswa'.<br>2. Kolom 'kelas' di sheet Siswa terisi dengan benar.<br>3. Filter kelas yang dipilih sesuai.</p>
-        </div>`;
-        return;
-      }
+    const printArea = document.getElementById('print-area');
+    
+    printArea.innerHTML = '<div class="card-grid">' + siswa.map(s => {
+      // FALLBACK: gunakan NIS jika username/password kosong
+      const username = s.username || s.user || s.nis || '-';
+      const password = s.password || s.pass || s.pwd || s.nis || '-';
 
-      // Generate Kartu
-      const printArea = document.getElementById('print-area');
-      printArea.innerHTML = `<div class="card-grid">${siswaList.map(s => `
+      return `
         <div class="exam-card">
           <div class="card-header">
             <div class="card-title">Kartu Peserta Ujian</div>
-            <div style="font-size:8pt">${esc(ujian.nama)}</div>
+            <div style="font-size:7pt;color:#666">SmartCBT Pro</div>
           </div>
           <div class="card-body">
-            <div class="card-photo">FOTO<br>3x4</div>
-                        <div class="card-info">
-              <p><strong>Nama</strong>: ${esc(s.nama)}</p>
-              <p><strong>NIS</strong>: ${esc(s.nis)}</p>
-              <p><strong>Kelas</strong>: ${esc(s.kelas)}</p>
-              <p><strong>Username</strong>: ${esc(s.username || '-')}</p>
-              <p><strong>Password</strong>: ${esc(s.password || '-')}</p>
+            <div class="card-photo">Foto</div>
+            <div class="card-info">
+              <p><strong>Nama</strong> ${esc(s.nama)}</p>
+              <p><strong>NIS</strong> ${esc(s.nis)}</p>
+              <p><strong>Kelas</strong> ${esc(s.kelas)}</p>
+              <p><strong>User</strong> ${esc(username)}</p>
+              <p><strong>Pass</strong> ${esc(password)}</p>
             </div>
           </div>
-          <div class="card-footer">
-            <p>${esc(ujian.nama)}</p>
-          </div>
-        </div>`).join('')}</div>`;
-      
-      printArea.classList.remove('hidden');
-      setTimeout(() => {
-        window.print();
-        setTimeout(() => printArea.classList.add('hidden'), 500);
-      }, 500);
-    }).catch(err => {
-      console.error("Error kartuPreview:", err);
-      ct.innerHTML = `<div class="gs rounded-xl p-8 text-center text-red-400">Error: ${err}</div>`;
-    });
+          <div class="card-footer">Login di SmartCBT Pro untuk ujian</div>
+        </div>
+      `;
+    }).join('') + '</div>';
+
+    printArea.classList.remove('hidden');
+    window.print();
+    setTimeout(() => {
+      printArea.classList.add('hidden');
+      printArea.innerHTML = '';
+    }, 1000);
+  },
+
+  exportKartu() {
+    const kelasFilter = document.getElementById('kartu_kelas')?.value || '';
+    let siswa = DH._siswaData || [];
+    if (kelasFilter) siswa = siswa.filter(s => s.kelas === kelasFilter);
+    if (!siswa.length) { toast('Tidak ada data', 'warning'); return; }
+
+    const data = siswa.map(s => ({
+      Nama: s.nama || '',
+      NIS: s.nis || '',
+      Kelas: s.kelas || '',
+      Username: s.username || s.user || s.nis || '',
+      Password: s.password || s.pass || s.pwd || s.nis || ''
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Kartu Peserta');
+    XLSX.writeFile(wb, 'Kartu_Peserta_Ujian.xlsx');
   },
 
   // ---------- FITUR BARU: IMPORT EXCEL ----------
