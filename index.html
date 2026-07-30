@@ -64,7 +64,7 @@ select option{background:#1a1a3e;color:#fff}
 .pvf:hover{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
 .pvf.on{background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-color:transparent;color:#fff}
 .img-preview-box{display:inline-block;position:relative;margin-top:4px}
-.img-preview-box img{max-height:64px;border-radius:8px;border:1px solid rgba(255,255,255,.1)}
+.img-preview-box img{max-height:150px;max-width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.1);cursor:pointer}
 .img-preview-box .img-del{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#ef4444;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1;border:2px solid #0a0a1a}
 body.exam-active,body.exam-active *{-webkit-user-select:none!important;-moz-user-select:none!important;-ms-user-select:none!important;user-select:none!important}
 body.exam-active textarea,body.exam-active input[type="text"]{user-select:text!important;-webkit-user-select:text!important;-moz-user-select:text!important}
@@ -309,8 +309,8 @@ var img = new Image();
 img.onload = function() {
 var canvas = document.createElement('canvas');
 var w = img.width, h = img.height;
-if (w > 800) { h = h * 800 / w; w = 800; }
-if (h > 600) { w = w * 600 / h; h = 600; }
+if (w > 1920) { h = h * 1920 / w; w = 1920; }
+if (h > 1080) { w = w * 1080 / h; h = 1080; }
 canvas.width = w; canvas.height = h;
 canvas.getContext('2d').drawImage(img, 0, 0, w, h);
 var base64 = canvas.toDataURL('image/jpeg', 0.75).split(',')[1];
@@ -347,37 +347,45 @@ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt
 }
 function escJ(s) { return esc(s).replace(/'/g, '&#39;'); }
 function rT(t, img) {
-if (!t && !img) return '';
-var html = '';
-if (t !== undefined && t !== null && t !== '') {
-var strT = String(t); var imgList = [];
-var safe = esc(strT).replace(/\[IMG:(.*?)\]/g, function(m, u) { imgList.push(u); return '%%IMG' + imgList.length + '%%'; });
-var processed = safe;
-imgList.forEach(function(u, i) {
-processed = processed.replace('%%IMG' + (i+1) + '%%', '<img src="' + esc(imgUrl(u)) + '" class="max-w-full max-h-80 rounded-lg my-2">');
-});
-html += processed;
-}
-if (img) html += '<div class="my-3"><img src="' + esc(imgUrl(img)) + '" class="max-w-full max-h-96 rounded-lg"></div>';
-return html;
+	if (!t && !img) return '';
+	var html = '';
+	if (t !== undefined && t !== null && t !== '') {
+		var strT = String(t); var imgList = [];
+		var safe = esc(strT).replace(/\[IMG:(.*?)\]/g, function(m, u) { imgList.push(u); return '%%IMG' + imgList.length + '%%'; });
+		var processed = safe;
+		imgList.forEach(function(u, i) {
+			processed = processed.replace('%%IMG' + (i+1) + '%%', '<img src="' + esc(imgUrl(u)) + '" class="max-w-full max-h-[70vh] rounded-xl shadow-lg my-3 cursor-zoom-in" onclick="zoomImg(this.src)">');
+		});
+		html += processed;
+	}
+	if (img) html += '<div class="my-4"><img src="' + esc(imgUrl(img)) + '" class="max-w-full max-h-[70vh] rounded-xl shadow-lg border border-white/10 cursor-zoom-in" onclick="zoomImg(this.src)"></div>';
+	return html;
 }
 function rO(t, img) {
-if (!t && !img) return '';
-var html = '';
-if (t !== undefined && t !== null && t !== '') {
-var strT = String(t);
-if (strT.match(/\[IMG:/)) {
-var imgList = [];
-var safe = esc(strT).replace(/\[IMG:(.*?)\]/g, function(m, u) { imgList.push(u); return '%%IMG' + imgList.length + '%%'; });
-var processed = safe;
-imgList.forEach(function(u, i) {
-processed = processed.replace('%%IMG' + (i+1) + '%%', '<img src="' + esc(imgUrl(u)) + '" class="max-h-20 rounded inline-block mx-1 align-middle">');
-});
-html += processed;
-} else { html += esc(strT); }
+	if (!t && !img) return '';
+	var html = '';
+	if (t !== undefined && t !== null && t !== '') {
+		var strT = String(t);
+		if (strT.match(/\[IMG:/)) {
+			var imgList = [];
+			var safe = esc(strT).replace(/\[IMG:(.*?)\]/g, function(m, u) { imgList.push(u); return '%%IMG' + imgList.length + '%%'; });
+			var processed = safe;
+			imgList.forEach(function(u, i) {
+				processed = processed.replace('%%IMG' + (i+1) + '%%', '<div class="my-2"><img src="' + esc(imgUrl(u)) + '" class="max-h-60 max-w-full rounded-lg shadow-md cursor-zoom-in" onclick="zoomImg(this.src)"></div>');
+			});
+			html += processed;
+		} else { html += esc(strT); }
+	}
+	if (img) html += '<div class="my-2"><img src="' + esc(imgUrl(img)) + '" class="max-h-60 max-w-full rounded-lg shadow-md cursor-zoom-in" onclick="zoomImg(this.src)"></div>';
+	return html;
 }
-if (img) html += '<img src="' + esc(imgUrl(img)) + '" class="max-h-20 rounded inline-block mx-1 align-middle">';
-return html;
+function zoomImg(src) {
+	var modal = document.getElementById('mg');
+	var mb = document.getElementById('mb');
+	if (modal && mb) {
+		mb.innerHTML = '<div class="text-center p-2"><img src="' + esc(src) + '" class="max-w-full max-h-[85vh] rounded-xl shadow-2xl mx-auto"><button onclick="hiM(\'mg\')" class="mt-4 glass px-6 py-2 rounded-xl text-sm hover:bg-white/10 transition font-semibold">Tutup</button></div>';
+		shM('mg');
+	}
 }
 function toast(msg, type) {
 type = type || 'success';
