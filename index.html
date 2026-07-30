@@ -346,6 +346,7 @@ if (s === null || s === undefined) return '';
 return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 function escJ(s) { return esc(s).replace(/'/g, '&#39;'); }
+
 function rT(t, img) {
 	if (!t && !img) return '';
 	var html = '';
@@ -354,13 +355,14 @@ function rT(t, img) {
 		var safe = esc(strT).replace(/\[IMG:(.*?)\]/g, function(m, u) { imgList.push(u); return '%%IMG' + imgList.length + '%%'; });
 		var processed = safe;
 		imgList.forEach(function(u, i) {
-			processed = processed.replace('%%IMG' + (i+1) + '%%', '<img src="' + esc(imgUrl(u)) + '" class="max-w-full max-h-[70vh] rounded-xl shadow-lg my-3 cursor-zoom-in" onclick="zoomImg(this.src)">');
+			processed = processed.replace('%%IMG' + (i+1) + '%%', '<img src="' + esc(imgUrl(u)) + '" class="max-w-full h-auto max-h-[70vh] rounded-xl shadow-lg my-4 block cursor-zoom-in" onclick="zoomImg(this.src)">');
 		});
 		html += processed;
 	}
-	if (img) html += '<div class="my-4"><img src="' + esc(imgUrl(img)) + '" class="max-w-full max-h-[70vh] rounded-xl shadow-lg border border-white/10 cursor-zoom-in" onclick="zoomImg(this.src)"></div>';
+	if (img) html += '<img src="' + esc(imgUrl(img)) + '" class="max-w-full h-auto max-h-[70vh] rounded-xl shadow-lg border border-white/10 my-4 block cursor-zoom-in" onclick="zoomImg(this.src)">';
 	return html;
 }
+
 function rO(t, img) {
 	if (!t && !img) return '';
 	var html = '';
@@ -371,14 +373,15 @@ function rO(t, img) {
 			var safe = esc(strT).replace(/\[IMG:(.*?)\]/g, function(m, u) { imgList.push(u); return '%%IMG' + imgList.length + '%%'; });
 			var processed = safe;
 			imgList.forEach(function(u, i) {
-				processed = processed.replace('%%IMG' + (i+1) + '%%', '<div class="my-2"><img src="' + esc(imgUrl(u)) + '" class="max-h-60 max-w-full rounded-lg shadow-md cursor-zoom-in" onclick="zoomImg(this.src)"></div>');
+				processed = processed.replace('%%IMG' + (i+1) + '%%', '<img src="' + esc(imgUrl(u)) + '" class="max-w-full h-auto max-h-64 rounded-lg shadow-md my-2 block cursor-zoom-in" onclick="zoomImg(this.src)">');
 			});
 			html += processed;
 		} else { html += esc(strT); }
 	}
-	if (img) html += '<div class="my-2"><img src="' + esc(imgUrl(img)) + '" class="max-h-60 max-w-full rounded-lg shadow-md cursor-zoom-in" onclick="zoomImg(this.src)"></div>';
+	if (img) html += '<img src="' + esc(imgUrl(img)) + '" class="max-w-full h-auto max-h-64 rounded-lg shadow-md my-2 block cursor-zoom-in" onclick="zoomImg(this.src)">';
 	return html;
 }
+
 function zoomImg(src) {
 	var modal = document.getElementById('mg');
 	var mb = document.getElementById('mb');
@@ -387,6 +390,7 @@ function zoomImg(src) {
 		shM('mg');
 	}
 }
+
 function toast(msg, type) {
 type = type || 'success';
 var colors = { success: 'text-green-400', error: 'text-red-400', warning: 'text-yellow-400' };
@@ -1763,7 +1767,7 @@ var opts = EX.oS[q.id] || [{ t: q.opsi_a, img: q.opsi_a_gambar }, { t: q.opsi_b,
 var lbArr = ['A', 'B', 'C', 'D']; var sel = EX.answers[q.id] || '';
 h += '<div class="space-y-3">' + opts.map(function(o, oi) {
 var lb = lbArr[oi]; var isSel = sel === lb;
-return '<div onclick="EX.selO(\'' + q.id + '\',\'' + lb + '\')" class="oc flex items-start gap-3 p-4 rounded-xl border-2 ' + (isSel ? 'border-purple-500 bg-purple-500/15' : 'border-white/10 bg-white/5 hover:border-purple-500/50') + '"><span class="w-8 h-8 rounded-lg ' + (isSel ? 'bg-purple-500 text-white' : 'bg-white/10 text-gray-400') + ' flex items-center justify-center text-sm font-bold shrink-0">' + lb + '</span><span class="text-sm">' + rO(o.t, o.img) + '</span></div>';
+return '<div onclick="EX.selO(\'' + q.id + '\',\'' + lb + '\')" class="oc flex items-start gap-3 p-4 rounded-xl border-2 ' + (isSel ? 'border-purple-500 bg-purple-500/15' : 'border-white/10 bg-white/5 hover:border-purple-500/50') + '"><span class="w-8 h-8 rounded-lg ' + (isSel ? 'bg-purple-500 text-white' : 'bg-white/10 text-gray-400') + ' flex items-center justify-center text-sm font-bold shrink-0">' + lb + '</span><span class="text-sm flex-1">' + rO(o.t, o.img) + '</span></div>';
 }).join('') + '</div>';
 } else if (q.jenis === 'bs') {
 var sel = EX.answers[q.id] || '';
