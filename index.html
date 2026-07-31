@@ -70,22 +70,48 @@ body.exam-active,body.exam-active *{-webkit-user-select:none!important;-moz-user
 body.exam-active textarea,body.exam-active input[type="text"]{user-select:text!important;-webkit-user-select:text!important;-moz-user-select:text!important}
 .safe-area-bottom{padding-bottom:env(safe-area-inset-bottom,0px)}
 @media print {
-body{background:#fff!important;color:#111!important;padding:0!important;margin:0!important;overflow:visible!important}
-*{font-family:"Plus Jakarta Sans",sans-serif;box-sizing:border-box;margin:0;padding:0;color:#111!important;background:#fff!important}
-.no-print{display:none!important}
-.print-area{display:block!important}
-#app > div:not(.print-area){display:none!important}
-.card-grid{display:grid!important;grid-template-columns:repeat(2, 1fr)!important;gap:0.5cm!important;padding:1cm!important}
-.exam-card{width:9cm!important;height:6cm!important;border:2px solid #111!important;border-radius:8px!important;padding:0.4cm!important;page-break-inside:avoid!important;display:flex!important;flex-direction:column!important;box-shadow:none!important;background:#fff!important}
-.card-header{border-bottom:1px solid #ccc!important;padding-bottom:4px!important;margin-bottom:4px!important;text-align:center!important}
-.card-title{font-size:10pt!important;font-weight:bold!important;text-transform:uppercase!important}
-.card-body{flex:1!important;display:flex!important;gap:8px!important}
-.card-photo{width:2.5cm!important;height:3cm!important;border:1px solid #ccc!important;background:#fff!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:8pt!important;flex-shrink:0!important;overflow:hidden!important}
-.card-photo img{max-width:100%!important;max-height:100%!important;object-fit:contain!important}
-.card-info{flex:1!important;font-size:8.5pt!important;line-height:1.4!important}
-.card-info p{margin-bottom:1px!important}
-.card-info strong{display:inline-block!important;width:1.8cm!important;font-weight:bold!important}
-.card-footer{border-top:1px solid #ccc!important;padding-top:3px!important;margin-top:3px!important;font-size:7pt!important;text-align:center!important;color:#666!important}
+  body { background:#fff!important; color:#111!important; padding:0!important; margin:0!important; overflow:visible!important; }
+  * { font-family:"Plus Jakarta Sans",sans-serif; box-sizing:border-box; margin:0; padding:0; color:#111!important; background:#fff!important; }
+  .no-print { display:none!important; }
+  .print-area { display:block!important; }
+  #app > div:not(.print-area) { display:none!important; }
+  
+  /* ✅ DIUBAH: Grid menjadi 3 kolom (repeat(3, 1fr)) */
+  .card-grid { 
+    display:grid!important; 
+    grid-template-columns:repeat(3, 1fr)!important; 
+    gap:0.5cm!important; 
+    padding:1cm!important; 
+  }
+  
+  /* ✅ DIUBAH: Lebar 100% agar mengikuti kolom grid, bukan lebar tetap */
+  .exam-card { 
+    width:100%!important; 
+    height:6cm!important; 
+    border:2px solid #111!important; 
+    border-radius:8px!important; 
+    padding:0.4cm!important; 
+    page-break-inside:avoid!important; 
+    display:flex!important; 
+    flex-direction:column!important; 
+    box-shadow:none!important; 
+    background:#fff!important; 
+  }
+  
+  .card-header { border-bottom:1px solid #ccc!important; padding-bottom:4px!important; margin-bottom:4px!important; text-align:center!important; }
+  
+  /* ✅ DISESUAIKAN: Ukuran font sedikit diperkecil agar muat di kartu yang lebih sempit */
+  .card-title { font-size:9pt!important; font-weight:bold!important; text-transform:uppercase!important; }
+  .card-body { flex:1!important; display:flex!important; gap:6px!important; }
+  .card-photo { width:2.5cm!important; height:3cm!important; border:1px solid #ccc!important; background:#fff!important; display:flex!important; align-items:center!important; justify-content:center!important; font-size:8pt!important; flex-shrink:0!important; overflow:hidden!important; }
+  .card-photo img { max-width:100%!important; max-height:100%!important; object-fit:contain!important; }
+  
+  /* ✅ DISESUAIKAN: Ukuran font dan lebar label agar rapi */
+  .card-info { flex:1!important; font-size:7.5pt!important; line-height:1.3!important; }
+  .card-info p { margin-bottom:1px!important; }
+  .card-info strong { display:inline-block!important; width:1.5cm!important; font-weight:bold!important; }
+  
+  .card-footer { border-top:1px solid #ccc!important; padding-top:3px!important; margin-top:3px!important; font-size:6.5pt!important; text-align:center!important; color:#666!important; }
 }
 </style>
 </head>
