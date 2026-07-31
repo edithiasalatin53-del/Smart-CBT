@@ -46,7 +46,15 @@ select option{background:#1a1a3e;color:#fff}
 .oc{transition:all .15s;cursor:pointer;user-select:none}
 .oc:hover{transform:scale(1.05)}
 .mj-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.mj-left{flex:1;padding:10px 12px;border-radius:12px;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);font-size:14px;min-height:42px;display:flex;align-items:center}
+/* ✅ FIX — gunakan align-items:flex-start agar gambar bisa expand */
+.mj-left {
+    flex:1; padding:10px 12px; border-radius:12px;
+    border:2px solid rgba(255,255,255,.1);
+    background:rgba(255,255,255,.05); font-size:14px;
+    min-height:42px;
+    display:flex; align-items:flex-start;  /* ← DIUBAH */
+    flex-wrap:wrap                         /* ← DITAMBAH agar gambar bisa wrap */
+}
 .mj-paired{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.1)}
 .mj-arrow{color:rgba(255,255,255,.3);flex-shrink:0}
 .mj-dd{flex:1;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.1);border-radius:12px;padding:8px 10px;font-size:13px;outline:none;min-height:42px;cursor:pointer;transition:border-color .2s}
@@ -64,7 +72,18 @@ select option{background:#1a1a3e;color:#fff}
 .pvf:hover{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
 .pvf.on{background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-color:transparent;color:#fff}
 .img-preview-box{display:inline-block;position:relative;margin-top:4px}
-.img-preview-box img{max-height:150px;max-width:100%;border-radius:8px;border:1px solid rgba(255,255,255,.1);cursor:pointer}
+/* ✅ FIX — perbesar preview agar gambar terlihat jelas */
+.img-preview-box img {
+    max-width: 100% !important;
+    max-height: 300px !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: contain !important;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    margin-top: 8px;
+}
 .img-preview-box .img-del{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#ef4444;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1;border:2px solid #0a0a1a}
 body.exam-active,body.exam-active *{-webkit-user-select:none!important;-moz-user-select:none!important;-ms-user-select:none!important;user-select:none!important}
 body.exam-active textarea,body.exam-active input[type="text"]{user-select:text!important;-webkit-user-select:text!important;-moz-user-select:text!important}
@@ -170,7 +189,10 @@ body{background:#fff!important;color:#111!important;padding:0!important;margin:0
 <button onclick="tSB()" class="md:hidden glass p-2 rounded-lg"><i data-lucide="menu" class="w-5 h-5"></i></button>
 <div><h1 id="dt" class="text-2xl font-bold"></h1><p id="dsc" class="text-sm text-gray-400 mt-1"></p></div>
 </div>
-<div class="glass rounded-xl px-4 py-2 flex items-center gap-2 text-sm"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span><span id="ud" class="text-gray-300"></span></div>
+<div class="flex items-center gap-2">
+	<button onclick="forceReload()" class="glass px-3 py-2 rounded-xl text-xs hover:bg-white/10 transition" title="Reload Paksa (Hapus Cache)">🔄 Reload</button>
+	<div class="glass rounded-xl px-4 py-2 flex items-center gap-2 text-sm"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span><span id="ud" class="text-gray-300"></span></div>
+</div>
 </div>
 <div id="dc"></div>
 </div>
@@ -286,16 +308,15 @@ return G(action, params).then(function(r) { _cache[key] = { d: r, t: Date.now() 
 }
 function flushCache() { Object.keys(_cache).forEach(function(k) { delete _cache[k]; }); }
 function imgUrl(id) {
-if (!id) return '';
-if (id.indexOf('data:') === 0) return id;
-if (id.indexOf('http') === 0) {
-var match = id.match(/\/d\/([^\/\?]+)/);
-if (match) {
-return API_URL + '?action=getimage&id=' + encodeURIComponent(match[1]);
+    if (!id) return '';
+    if (id.indexOf('http') === 0) return id;
+    return API_URL + '?action=getimage&id=' + encodeURIComponent(id);
 }
-return id;
-}
-return API_URL + '?action=getimage&id=' + encodeURIComponent(id);
+
+// Fungsi fallback ke Google Drive Thumbnail (Rahasia kode aplikasi lain)
+function imgOnErr(fbUrl) {
+    var s = fbUrl.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    return "this.onerror=function(){this.style.display='none'};this.src='" + s + "';";
 }
 function upImg(targetId) {
 var inp = document.createElement('input');
@@ -348,45 +369,69 @@ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt
 function escJ(s) { return esc(s).replace(/'/g, '&#39;'); }
 
 function rT(t, img) {
-	if (!t && !img) return '';
-	var html = '';
-	if (t !== undefined && t !== null && t !== '') {
-		var strT = String(t); var imgList = [];
-		var safe = esc(strT).replace(/\[IMG:(.*?)\]/g, function(m, u) { imgList.push(u); return '%%IMG' + imgList.length + '%%'; });
-		var processed = safe;
-		imgList.forEach(function(u, i) {
-			processed = processed.replace('%%IMG' + (i+1) + '%%', '<img src="' + esc(imgUrl(u)) + '" class="max-w-full h-auto max-h-[70vh] rounded-xl shadow-lg my-4 block cursor-zoom-in" onclick="zoomImg(this.src)">');
-		});
-		html += processed;
-	}
-	if (img) html += '<img src="' + esc(imgUrl(img)) + '" class="max-w-full h-auto max-h-[70vh] rounded-xl shadow-lg border border-white/10 my-4 block cursor-zoom-in" onclick="zoomImg(this.src)">';
-	return html;
+    if (!t && !img) return '';
+    var html = '';
+    if (t) {
+        var imgList = [];
+        var safe = String(t).replace(/\[IMG:(.*?)\]/g, function(m, u) {
+            imgList.push(u);
+            return '%%IMG' + imgList.length + '%%';
+        });
+        safe = esc(safe);
+        for (var i = 0; i < imgList.length; i++) {
+            var src1 = esc(imgUrl(imgList[i]));
+            var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(imgList[i]) + '&sz=w1200';
+            safe = safe.replace('%%IMG' + (i + 1) + '%%',
+            '<img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:500px; height:auto; display:block; border-radius:8px; margin:12px 0; object-fit:contain; box-shadow:0 4px 15px rgba(0,0,0,0.2);">');
+        }
+        html += safe;
+    }
+    if (img) {
+        var src1 = esc(imgUrl(img));
+        var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(img) + '&sz=w1200';
+        html += '<div style="margin:16px 0;"><img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:600px; height:auto; display:block; border-radius:8px; object-fit:contain; box-shadow:0 8px 25px rgba(0,0,0,0.3);"></div>';
+    }
+    return html;
 }
 
 function rO(t, img) {
-	if (!t && !img) return '';
-	var html = '';
-	if (t !== undefined && t !== null && t !== '') {
-		var strT = String(t);
-		if (strT.match(/\[IMG:/)) {
-			var imgList = [];
-			var safe = esc(strT).replace(/\[IMG:(.*?)\]/g, function(m, u) { imgList.push(u); return '%%IMG' + imgList.length + '%%'; });
-			var processed = safe;
-			imgList.forEach(function(u, i) {
-				processed = processed.replace('%%IMG' + (i+1) + '%%', '<img src="' + esc(imgUrl(u)) + '" class="max-w-full h-auto max-h-64 rounded-lg shadow-md my-2 block cursor-zoom-in" onclick="zoomImg(this.src)">');
-			});
-			html += processed;
-		} else { html += esc(strT); }
-	}
-	if (img) html += '<img src="' + esc(imgUrl(img)) + '" class="max-w-full h-auto max-h-64 rounded-lg shadow-md my-2 block cursor-zoom-in" onclick="zoomImg(this.src)">';
-	return html;
+    if (!t && !img) return '';
+    var html = '';
+    if (t) {
+        if (String(t).match(/\[IMG:/)) {
+            var imgList = [];
+            var safe = String(t).replace(/\[IMG:(.*?)\]/g, function(m, u) {
+                imgList.push(u);
+                return '%%IMG' + imgList.length + '%%';
+            });
+            safe = esc(safe);
+            for (var i = 0; i < imgList.length; i++) {
+                var src1 = esc(imgUrl(imgList[i]));
+                var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(imgList[i]) + '&sz=w800';
+                safe = safe.replace('%%IMG' + (i + 1) + '%%',
+                '<img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:300px; height:auto; display:block; border-radius:6px; margin:8px 0; object-fit:contain;">');
+            }
+            html += safe;
+        } else {
+            html += esc(t);
+        }
+    }
+    if (img) {
+        var src1 = esc(imgUrl(img));
+        var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(img) + '&sz=w800';
+        html += '<img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:300px; height:auto; display:block; border-radius:6px; margin:8px 0; object-fit:contain;">';
+    }
+    return html;
 }
 
 function zoomImg(src) {
 	var modal = document.getElementById('mg');
 	var mb = document.getElementById('mb');
 	if (modal && mb) {
-		mb.innerHTML = '<div class="text-center p-2"><img src="' + esc(src) + '" class="max-w-full max-h-[85vh] rounded-xl shadow-2xl mx-auto"><button onclick="hiM(\'mg\')" class="mt-4 glass px-6 py-2 rounded-xl text-sm hover:bg-white/10 transition font-semibold">Tutup</button></div>';
+		mb.innerHTML = '<div style="text-align:center; padding:8px;">' +
+			'<img src="' + esc(src) + '" style="max-width:100% !important; max-height:85vh !important; height:auto !important; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,.5); margin:0 auto; display:block;">' +
+			'<button onclick="hiM(\'mg\')" style="margin-top:16px; background:rgba(255,255,255,.1); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,.15); color:#fff; padding:10px 24px; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer;">Tutup</button>' +
+			'</div>';
 		shM('mg');
 	}
 }
@@ -1767,7 +1812,7 @@ var opts = EX.oS[q.id] || [{ t: q.opsi_a, img: q.opsi_a_gambar }, { t: q.opsi_b,
 var lbArr = ['A', 'B', 'C', 'D']; var sel = EX.answers[q.id] || '';
 h += '<div class="space-y-3">' + opts.map(function(o, oi) {
 var lb = lbArr[oi]; var isSel = sel === lb;
-return '<div onclick="EX.selO(\'' + q.id + '\',\'' + lb + '\')" class="oc flex items-start gap-3 p-4 rounded-xl border-2 ' + (isSel ? 'border-purple-500 bg-purple-500/15' : 'border-white/10 bg-white/5 hover:border-purple-500/50') + '"><span class="w-8 h-8 rounded-lg ' + (isSel ? 'bg-purple-500 text-white' : 'bg-white/10 text-gray-400') + ' flex items-center justify-center text-sm font-bold shrink-0">' + lb + '</span><span class="text-sm flex-1">' + rO(o.t, o.img) + '</span></div>';
+return '<div onclick="EX.selO(\'' + q.id + '\',\'' + lb + '\')" class="oc flex items-start gap-3 p-4 rounded-xl border-2 ' + (isSel ? 'border-purple-500 bg-purple-500/15' : 'border-white/10 bg-white/5 hover:border-purple-500/50') + '"><span class="w-8 h-8 rounded-lg ' + (isSel ? 'bg-purple-500 text-white' : 'bg-white/10 text-gray-400') + ' flex items-center justify-center text-sm font-bold shrink-0">' + lb + '</span><div class="text-sm flex-1 w-full">' + rO(o.t, o.img) + '</div></div>';
 }).join('') + '</div>';
 } else if (q.jenis === 'bs') {
 var sel = EX.answers[q.id] || '';
@@ -2002,6 +2047,17 @@ var ld = document.getElementById('ld');
 if (ld) { ld.style.opacity = '0'; setTimeout(function() { ld.remove(); }, 500); }
 }, 800);
 });
+function forceReload() {
+	// Hapus semua cache
+	if ('caches' in window) {
+		caches.keys().then(function(names) {
+			names.forEach(function(name) { caches.delete(name); });
+		});
+	}
+	// Tambahkan timestamp ke URL untuk paksa reload
+	var newUrl = window.location.href.split('?')[0] + '?v=' + Date.now();
+	window.location.replace(newUrl);
+}
 </script>
 </body>
 </html>
