@@ -46,15 +46,7 @@ select option{background:#1a1a3e;color:#fff}
 .oc{transition:all .15s;cursor:pointer;user-select:none}
 .oc:hover{transform:scale(1.05)}
 .mj-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-/* ✅ FIX — gunakan align-items:flex-start agar gambar bisa expand */
-.mj-left {
-    flex:1; padding:10px 12px; border-radius:12px;
-    border:2px solid rgba(255,255,255,.1);
-    background:rgba(255,255,255,.05); font-size:14px;
-    min-height:42px;
-    display:flex; align-items:flex-start;  /* ← DIUBAH */
-    flex-wrap:wrap                         /* ← DITAMBAH agar gambar bisa wrap */
-}
+.mj-left {flex:1; padding:10px 12px; border-radius:12px; border:2px solid rgba(255,255,255,.1); background:rgba(255,255,255,.05); font-size:14px; min-height:42px; display:flex; align-items:flex-start; flex-wrap:wrap}
 .mj-paired{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.1)}
 .mj-arrow{color:rgba(255,255,255,.3);flex-shrink:0}
 .mj-dd{flex:1;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.1);border-radius:12px;padding:8px 10px;font-size:13px;outline:none;min-height:42px;cursor:pointer;transition:border-color .2s}
@@ -72,18 +64,7 @@ select option{background:#1a1a3e;color:#fff}
 .pvf:hover{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
 .pvf.on{background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-color:transparent;color:#fff}
 .img-preview-box{display:inline-block;position:relative;margin-top:4px}
-/* ✅ FIX — perbesar preview agar gambar terlihat jelas */
-.img-preview-box img {
-    max-width: 100% !important;
-    max-height: 300px !important;
-    height: auto !important;
-    display: block !important;
-    object-fit: contain !important;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,.1);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    margin-top: 8px;
-}
+.img-preview-box img {max-width: 100% !important; max-height: 300px !important; height: auto !important; display: block !important; object-fit: contain !important; border-radius: 8px; border: 1px solid rgba(255,255,255,.1); box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-top: 8px;}
 .img-preview-box .img-del{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#ef4444;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1;border:2px solid #0a0a1a}
 body.exam-active,body.exam-active *{-webkit-user-select:none!important;-moz-user-select:none!important;-ms-user-select:none!important;user-select:none!important}
 body.exam-active textarea,body.exam-active input[type="text"]{user-select:text!important;-webkit-user-select:text!important;-moz-user-select:text!important}
@@ -190,8 +171,8 @@ body{background:#fff!important;color:#111!important;padding:0!important;margin:0
 <div><h1 id="dt" class="text-2xl font-bold"></h1><p id="dsc" class="text-sm text-gray-400 mt-1"></p></div>
 </div>
 <div class="flex items-center gap-2">
-	<button onclick="forceReload()" class="glass px-3 py-2 rounded-xl text-xs hover:bg-white/10 transition" title="Reload Paksa (Hapus Cache)">🔄 Reload</button>
-	<div class="glass rounded-xl px-4 py-2 flex items-center gap-2 text-sm"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span><span id="ud" class="text-gray-300"></span></div>
+<button onclick="forceReload()" class="glass px-3 py-2 rounded-xl text-xs hover:bg-white/10 transition" title="Reload Paksa (Hapus Cache)">🔄 Reload</button>
+<div class="glass rounded-xl px-4 py-2 flex items-center gap-2 text-sm"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span><span id="ud" class="text-gray-300"></span></div>
 </div>
 </div>
 <div id="dc"></div>
@@ -262,7 +243,7 @@ body{background:#fff!important;color:#111!important;padding:0!important;margin:0
 <div id="print-area" class="print-area hidden"></div>
 </div>
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbzHZBetT8So9YJvXiw1oc6kb7j6BWjO6A8pg3ZRR-Vdf7NDheWDFWIUWOw2HjSvc8Yp/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbzr2V4xO7i2RjssTxFYsYO9XnhLsquBjzzh-GOR9Fst_D8cvUXUCnT_1RQW2qpFzJtX/exec';
 var LM = {
 layouts: ['sl', 'sd', 'se'],
 hideAll: function() {
@@ -308,15 +289,13 @@ return G(action, params).then(function(r) { _cache[key] = { d: r, t: Date.now() 
 }
 function flushCache() { Object.keys(_cache).forEach(function(k) { delete _cache[k]; }); }
 function imgUrl(id) {
-    if (!id) return '';
-    if (id.indexOf('http') === 0) return id;
-    return API_URL + '?action=getimage&id=' + encodeURIComponent(id);
+if (!id) return '';
+if (id.indexOf('http') === 0) return id;
+return API_URL + '?action=getimage&id=' + encodeURIComponent(id);
 }
-
-// Fungsi fallback ke Google Drive Thumbnail (Rahasia kode aplikasi lain)
 function imgOnErr(fbUrl) {
-    var s = fbUrl.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-    return "this.onerror=function(){this.style.display='none'};this.src='" + s + "';";
+var s = fbUrl.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+return "this.onerror=function(){this.style.display='none'};this.src='" + s + "';";
 }
 function upImg(targetId) {
 var inp = document.createElement('input');
@@ -367,75 +346,71 @@ if (s === null || s === undefined) return '';
 return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 function escJ(s) { return esc(s).replace(/'/g, '&#39;'); }
-
 function rT(t, img) {
-    if (!t && !img) return '';
-    var html = '';
-    if (t) {
-        var imgList = [];
-        var safe = String(t).replace(/\[IMG:(.*?)\]/g, function(m, u) {
-            imgList.push(u);
-            return '%%IMG' + imgList.length + '%%';
-        });
-        safe = esc(safe);
-        for (var i = 0; i < imgList.length; i++) {
-            var src1 = esc(imgUrl(imgList[i]));
-            var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(imgList[i]) + '&sz=w1200';
-            safe = safe.replace('%%IMG' + (i + 1) + '%%',
-            '<img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:500px; height:auto; display:block; border-radius:8px; margin:12px 0; object-fit:contain; box-shadow:0 4px 15px rgba(0,0,0,0.2);">');
-        }
-        html += safe;
-    }
-    if (img) {
-        var src1 = esc(imgUrl(img));
-        var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(img) + '&sz=w1200';
-        html += '<div style="margin:16px 0;"><img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:600px; height:auto; display:block; border-radius:8px; object-fit:contain; box-shadow:0 8px 25px rgba(0,0,0,0.3);"></div>';
-    }
-    return html;
+if (!t && !img) return '';
+var html = '';
+if (t) {
+var imgList = [];
+var safe = String(t).replace(/\[IMG:(.*?)\]/g, function(m, u) {
+imgList.push(u);
+return '%%IMG' + imgList.length + '%%';
+});
+safe = esc(safe);
+for (var i = 0; i < imgList.length; i++) {
+var src1 = esc(imgUrl(imgList[i]));
+var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(imgList[i]) + '&sz=w1200';
+safe = safe.replace('%%IMG' + (i + 1) + '%%',
+'<img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:500px; height:auto; display:block; border-radius:8px; margin:12px 0; object-fit:contain; box-shadow:0 4px 15px rgba(0,0,0,0.2);">');
 }
-
+html += safe;
+}
+if (img) {
+var src1 = esc(imgUrl(img));
+var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(img) + '&sz=w1200';
+html += '<div style="margin:16px 0;"><img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:600px; height:auto; display:block; border-radius:8px; object-fit:contain; box-shadow:0 8px 25px rgba(0,0,0,0.3);"></div>';
+}
+return html;
+}
 function rO(t, img) {
-    if (!t && !img) return '';
-    var html = '';
-    if (t) {
-        if (String(t).match(/\[IMG:/)) {
-            var imgList = [];
-            var safe = String(t).replace(/\[IMG:(.*?)\]/g, function(m, u) {
-                imgList.push(u);
-                return '%%IMG' + imgList.length + '%%';
-            });
-            safe = esc(safe);
-            for (var i = 0; i < imgList.length; i++) {
-                var src1 = esc(imgUrl(imgList[i]));
-                var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(imgList[i]) + '&sz=w800';
-                safe = safe.replace('%%IMG' + (i + 1) + '%%',
-                '<img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:300px; height:auto; display:block; border-radius:6px; margin:8px 0; object-fit:contain;">');
-            }
-            html += safe;
-        } else {
-            html += esc(t);
-        }
-    }
-    if (img) {
-        var src1 = esc(imgUrl(img));
-        var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(img) + '&sz=w800';
-        html += '<img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:300px; height:auto; display:block; border-radius:6px; margin:8px 0; object-fit:contain;">';
-    }
-    return html;
+if (!t && !img) return '';
+var html = '';
+if (t) {
+if (String(t).match(/\[IMG:/)) {
+var imgList = [];
+var safe = String(t).replace(/\[IMG:(.*?)\]/g, function(m, u) {
+imgList.push(u);
+return '%%IMG' + imgList.length + '%%';
+});
+safe = esc(safe);
+for (var i = 0; i < imgList.length; i++) {
+var src1 = esc(imgUrl(imgList[i]));
+var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(imgList[i]) + '&sz=w800';
+safe = safe.replace('%%IMG' + (i + 1) + '%%',
+'<img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:300px; height:auto; display:block; border-radius:6px; margin:8px 0; object-fit:contain;">');
 }
-
+html += safe;
+} else {
+html += esc(t);
+}
+}
+if (img) {
+var src1 = esc(imgUrl(img));
+var src2 = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(img) + '&sz=w800';
+html += '<img src="' + src1 + '" onerror="' + imgOnErr(src2) + '" style="max-width:100%; max-height:300px; height:auto; display:block; border-radius:6px; margin:8px 0; object-fit:contain;">';
+}
+return html;
+}
 function zoomImg(src) {
-	var modal = document.getElementById('mg');
-	var mb = document.getElementById('mb');
-	if (modal && mb) {
-		mb.innerHTML = '<div style="text-align:center; padding:8px;">' +
-			'<img src="' + esc(src) + '" style="max-width:100% !important; max-height:85vh !important; height:auto !important; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,.5); margin:0 auto; display:block;">' +
-			'<button onclick="hiM(\'mg\')" style="margin-top:16px; background:rgba(255,255,255,.1); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,.15); color:#fff; padding:10px 24px; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer;">Tutup</button>' +
-			'</div>';
-		shM('mg');
-	}
+var modal = document.getElementById('mg');
+var mb = document.getElementById('mb');
+if (modal && mb) {
+mb.innerHTML = '<div style="text-align:center; padding:8px;">' +
+'<img src="' + esc(src) + '" style="max-width:100% !important; max-height:85vh !important; height:auto !important; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,.5); margin:0 auto; display:block;">' +
+'<button onclick="hiM(\'mg\')" style="margin-top:16px; background:rgba(255,255,255,.1); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,.15); color:#fff; padding:10px 24px; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer;">Tutup</button>' +
+'</div>';
+shM('mg');
 }
-
+}
 function toast(msg, type) {
 type = type || 'success';
 var colors = { success: 'text-green-400', error: 'text-red-400', warning: 'text-yellow-400' };
@@ -502,7 +477,8 @@ siswa: [
 ],
 operator: [
 { i: 'home', l: 'Dashboard', v: 'home' }, { i: 'users', l: 'Siswa', v: 'siswa' },
-{ i: 'key', l: 'Token', v: 'tokens' }, { i: 'credit-card', l: 'Kartu Peserta', v: 'kartu' }
+{ i: 'key', l: 'Token', v: 'tokens' }, { i: 'credit-card', l: 'Kartu Peserta', v: 'kartu' },
+{ i: 'clipboard-list', l: 'Rekap Nilai', v: 'rekap' }
 ]
 };
 var AU = {
@@ -608,15 +584,23 @@ if (U.role === 'siswa') DH._homeSiswa(); else DH._homeParent();
 }).catch(function(e) { ct.innerHTML = '<p class="text-red-400">Error: ' + esc(e) + '</p>'; });
 },
 _homeSiswa: function() {
-G('getUjian', { role: U.role, userId: U.id, kelas: U.kelas }).then(function(r) {
-var el = document.getElementById('hex'); if (!el || !r.s) return;
-if (!r.d.length) { el.innerHTML = '<div class="gs rounded-xl p-8 text-center text-gray-400">Tidak ada ujian tersedia</div>'; ic(); return; }
-el.innerHTML = '<div class="gs rounded-xl p-6"><h3 class="font-semibold mb-4">Ujian Tersedia</h3><div class="space-y-3">' +
-r.d.map(function(u) {
-return '<div class="flex items-center justify-between bg-white/5 rounded-xl p-4"><div><div class="font-medium">' + esc(u.nama) + '</div><div class="text-xs text-gray-400 mt-1">' + esc(u.mapel_nama) + ' &bull; ' + u.durasi + ' menit &bull; Kelas ' + esc(u.kelas_nama) + '</div></div><button onclick="EX.selExam(\'' + u.id + '\',\'' + escJ(u.nama) + '\');shM(\'mt\')" class="bp px-5 py-2.5 rounded-xl text-xs font-semibold">Token</button></div>';
-}).join('') + '</div></div>';
-ic();
-}).catch(function() {});
+  Promise.all([
+    G('getUjian', { role: U.role, userId: U.id, kelas: U.kelas }),
+    G('getNilai', { filters: { siswa_id: U.id } })
+  ]).then(function(res) {
+    var el = document.getElementById('hex'); if (!el || !res[0].s) return;
+    var ujian = res[0].d || [];
+    var nilai = res[1].s ? (res[1].d || []) : [];
+    var takenIds = nilai.map(function(n) { return n.ujian_id; });
+    var available = ujian.filter(function(u) { return takenIds.indexOf(u.id) === -1; });
+    
+    if (!available.length) { el.innerHTML = '<div class="gs rounded-xl p-8 text-center text-gray-400">Tidak ada ujian tersedia (atau semua ujian telah dikerjakan)</div>'; ic(); return; }
+    el.innerHTML = '<div class="gs rounded-xl p-6"><h3 class="font-semibold mb-4">Ujian Tersedia</h3><div class="space-y-3">' +
+    available.map(function(u) {
+      return '<div class="flex items-center justify-between bg-white/5 rounded-xl p-4"><div><div class="font-medium">' + esc(u.nama) + '</div><div class="text-xs text-gray-400 mt-1">' + esc(u.mapel_nama) + ' &bull; ' + u.durasi + ' menit &bull; Kelas ' + esc(u.kelas_nama) + '</div></div><button onclick="EX.selExam(\'' + u.id + '\',\'' + escJ(u.nama) + '\');shM(\'mt\')" class="bp px-5 py-2.5 rounded-xl text-xs font-semibold">Token</button></div>';
+    }).join('') + '</div></div>';
+    ic();
+  }).catch(function() {});
 },
 _homeParent: function() {
 var el = document.getElementById('hex'); if (!el) return;
@@ -1166,7 +1150,7 @@ ur.d.map(function(u) { return '<option value="' + u.id + '" ' + (u.id === select
 DH.rfTk(selectedId);
 G('getSoal', { ujian_id: selectedId }).then(function(sr) {
 if (!sr.s) { document.getElementById('sct').innerHTML = '<p class="text-red-400">' + esc(sr.error) + '</p>'; return; }
-var jt = { pg: 'PG', bs: 'B/S', short: 'Isian', essay: 'Essay', menjodohkan: 'Jodoh', menyusun: 'Susun' };
+var jt = { pg: 'PG', bs: 'True/False', short: 'Isian', essay: 'Essay', menjodohkan: 'Jodoh', menyusun: 'Susun' };
 document.getElementById('sct').innerHTML = '<div class="flex justify-end gap-2 mb-4 flex-wrap">' +
 '<button onclick="DH.downloadTemplateSoal()" class="glass px-4 py-2 rounded-lg text-sm hover:bg-white/10 flex items-center gap-2"><i data-lucide="file-down" class="w-4 h-4 text-blue-400"></i>Template</button>' +
 '<button onclick="DH.impS()" class="glass px-4 py-2 rounded-lg text-sm hover:bg-white/10 flex items-center gap-2"><i data-lucide="upload" class="w-4 h-4 text-green-400"></i>Import Excel</button>' +
@@ -1380,7 +1364,7 @@ Promise.all([G('getSoal', { ujian_id: uid }), G('getNilai', { filters: { ujian_i
 .then(function(res) {
 if (!res[0].s || !res[1].s) { ct.innerHTML = '<p class="text-red-400">Gagal memuat</p>'; ic(); return; }
 var soal = res[0].d || []; var students = res[1].d || [];
-var typeLabels = { pg: 'PG', bs: 'B/S', short: 'Isian', essay: 'Essay', menjodohkan: 'Jodoh', menyusun: 'Susun' };
+var typeLabels = { pg: 'PG', bs: 'True/False', short: 'Isian', essay: 'Essay', menjodohkan: 'Jodoh', menyusun: 'Susun' };
 var typeColors = { pg: 'bg-blue-500/20 text-blue-400', bs: 'bg-green-500/20 text-green-400', short: 'bg-cyan-500/20 text-cyan-400', essay: 'bg-purple-500/20 text-purple-400', menjodohkan: 'bg-yellow-500/20 text-yellow-400', menyusun: 'bg-pink-500/20 text-pink-400' };
 var grouped = {}; soal.forEach(function(q) { if (!grouped[q.jenis]) grouped[q.jenis] = []; grouped[q.jenis].push(q); });
 var h = '<div class="print-area">';
@@ -1484,14 +1468,20 @@ bars.map(function(d) { return '<div><div class="flex justify-between text-sm mb-
 }).catch(function(e) { el.innerHTML = '<p class="text-red-400">' + esc(e) + '</p>'; ic(); });
 },
 jadwal: function() {
-var ct = document.getElementById('dc');
-G('getUjian', { role: U.role, userId: U.id, kelas: U.kelas })
-.then(function(r) {
-var rows = r.d || [];
-ct.innerHTML = rows.length ? '<div class="space-y-4">' + rows.map(function(u) {
-return '<div class="gs rounded-xl p-5 flex items-center justify-between hover:bg-white/5 transition"><div class="flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center"><i data-lucide="file-text" class="w-6 h-6 text-purple-400"></i></div><div><div class="font-medium">' + esc(u.nama) + '</div><div class="text-xs text-gray-400 mt-1">' + esc(u.mapel_nama) + ' &bull; ' + u.durasi + ' menit</div></div></div><button onclick="EX.selExam(\'' + u.id + '\',\'' + escJ(u.nama) + '\');shM(\'mt\')" class="bp px-5 py-2.5 rounded-xl text-sm font-semibold">Ikut Ujian</button></div>';
-}).join('') + '</div>' : '<div class="gs rounded-xl p-8 text-center text-gray-400">Tidak ada jadwal</div>'; ic();
-}).catch(function(e) { ct.innerHTML = '<p class="text-red-400">' + esc(e) + '</p>'; ic(); });
+  var ct = document.getElementById('dc');
+  Promise.all([
+    G('getUjian', { role: U.role, userId: U.id, kelas: U.kelas }),
+    G('getNilai', { filters: { siswa_id: U.id } })
+  ]).then(function(res) {
+    var ujian = res[0].d || [];
+    var nilai = res[1].s ? (res[1].d || []) : [];
+    var takenIds = nilai.map(function(n) { return n.ujian_id; });
+    var rows = ujian.filter(function(u) { return takenIds.indexOf(u.id) === -1; });
+    
+    ct.innerHTML = rows.length ? '<div class="space-y-4">' + rows.map(function(u) {
+      return '<div class="gs rounded-xl p-5 flex items-center justify-between hover:bg-white/5 transition"><div class="flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center"><i data-lucide="file-text" class="w-6 h-6 text-purple-400"></i></div><div><div class="font-medium">' + esc(u.nama) + '</div><div class="text-xs text-gray-400 mt-1">' + esc(u.mapel_nama) + ' &bull; ' + u.durasi + ' menit</div></div></div><button onclick="EX.selExam(\'' + u.id + '\',\'' + escJ(u.nama) + '\');shM(\'mt\')" class="bp px-5 py-2.5 rounded-xl text-sm font-semibold">Ikut Ujian</button></div>';
+    }).join('') + '</div>' : '<div class="gs rounded-xl p-8 text-center text-gray-400">Tidak ada jadwal / Semua ujian telah dikerjakan</div>'; ic();
+  }).catch(function(e) { ct.innerHTML = '<p class="text-red-400">' + esc(e) + '</p>'; ic(); });
 },
 nilai: function() {
 var ct = document.getElementById('dc');
@@ -1526,7 +1516,7 @@ var opts = '<option value="">Semua Ujian (' + allSoal.length + ')</option>';
 allUjian.forEach(function(u) { var c = examCnt[u.id] || 0; if (c > 0) opts += '<option value="' + u.id + '">' + esc(u.nama) + ' (' + c + ')</option>'; });
 var types = { pg: 0, bs: 0, short: 0, essay: 0, menjodohkan: 0, menyusun: 0 };
 allSoal.forEach(function(q) { if (types[q.jenis] !== undefined) types[q.jenis]++; });
-var tl = { pg: 'PG', bs: 'B/S', short: 'Isian', essay: 'Essay', menjodohkan: 'Jodoh', menyusun: 'Susun' };
+var tl = { pg: 'PG', bs: 'True/False', short: 'Isian', essay: 'Essay', menjodohkan: 'Jodoh', menyusun: 'Susun' };
 var h = '<div class="mb-6 space-y-3"><div class="flex flex-wrap items-center gap-3"><label class="text-xs text-gray-400 font-semibold shrink-0">Ujian:</label><select id="pv_exam" onchange="DH._pvCh()" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500 flex-1 max-w-md">' + opts + '</select></div><div class="flex flex-wrap gap-2" id="pv_tbtns"><button onclick="DH._pvST(\'\',this)" class="pvf on px-4 py-2 rounded-xl text-xs font-semibold transition">Semua (' + allSoal.length + ')</button>';
 for (var t in tl) { h += '<button onclick="DH._pvST(\'' + t + '\',this)" class="pvf px-4 py-2 rounded-xl text-xs font-semibold transition">' + tl[t] + ' (' + types[t] + ')</button>'; }
 h += '</div></div><div id="pvc"></div>'; ct.innerHTML = h;
@@ -1542,12 +1532,12 @@ if (DH._pvType) filtered = filtered.filter(function(q) { return q.jenis === DH._
 var base = DH._pvExam ? all.filter(function(q) { return q.ujian_id === DH._pvExam; }) : all;
 var types = { pg: 0, bs: 0, short: 0, essay: 0, menjodohkan: 0, menyusun: 0 };
 base.forEach(function(q) { if (types[q.jenis] !== undefined) types[q.jenis]++; });
-var tS = { pg: 'PG', bs: 'B/S', short: 'Isian', essay: 'Essay', menjodohkan: 'Jodoh', menyusun: 'Susun' };
+var tS = { pg: 'PG', bs: 'True/False', short: 'Isian', essay: 'Essay', menjodohkan: 'Jodoh', menyusun: 'Susun' };
 var btns = document.querySelectorAll('#pv_tbtns .pvf');
 if (btns.length) { btns[0].textContent = 'Semua (' + base.length + ')'; var ti = 0; for (var t in tS) { ti++; if (btns[ti]) btns[ti].textContent = tS[t] + ' (' + types[t] + ')'; } }
 var ct = document.getElementById('pvc');
 if (!filtered.length) { ct.innerHTML = '<div class="gs rounded-xl p-8 text-center text-gray-400">Tidak ada soal</div>'; ic(); return; }
-var tl = { pg: 'PG', bs: 'B/S', short: 'Isian', essay: 'Essay', menjodohkan: 'Jodoh', menyusun: 'Susun' };
+var tl = { pg: 'PG', bs: 'True/False', short: 'Isian', essay: 'Essay', menjodohkan: 'Jodoh', menyusun: 'Susun' };
 var cl = { pg: 'bg-blue-500/20 text-blue-400', bs: 'bg-green-500/20 text-green-400', short: 'bg-cyan-500/20 text-cyan-400', essay: 'bg-purple-500/20 text-purple-400', menjodohkan: 'bg-yellow-500/20 text-yellow-400', menyusun: 'bg-pink-500/20 text-pink-400' };
 var h = '<div class="space-y-4">';
 filtered.forEach(function(q, i) {
@@ -1563,8 +1553,8 @@ var isK = (o.t === q.kunci_jawaban);
 h += '<div class="flex items-start gap-3 p-3 rounded-xl ' + (isK ? 'bg-green-500/10 border border-green-500/30' : 'bg-white/5 border border-white/10') + '"><span class="w-7 h-7 rounded-lg ' + (isK ? 'bg-green-500 text-white' : 'bg-white/10 text-gray-400') + ' flex items-center justify-center text-xs font-bold shrink-0">' + lbArr[oi] + '</span><span class="text-sm ' + (isK ? 'text-green-300' : 'text-gray-300') + '">' + rO(o.t, o.img) + '</span></div>';
 }); h += '</div>';
 } else if (q.jenis === 'bs') {
-var isB = (q.kunci_jawaban === 'Benar');
-h += '<div class="flex gap-3 pl-11 mb-4"><span class="px-4 py-2 rounded-xl text-sm font-semibold ' + (isB ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-white/5 text-gray-400 border border-white/10') + '">Benar</span><span class="px-4 py-2 rounded-xl text-sm font-semibold ' + (isB ? 'bg-white/5 text-gray-500 border border-white/10' : 'bg-red-500/20 text-red-400 border border-red-500/30') + '">Salah</span></div>';
+  var isB = (q.kunci_jawaban === 'True');
+  h += '<div class="flex gap-3 pl-11 mb-4"><span class="px-4 py-2 rounded-xl text-sm font-semibold ' + (isB ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-white/5 text-gray-400 border border-white/10') + '">True</span><span class="px-4 py-2 rounded-xl text-sm font-semibold ' + (isB ? 'bg-white/5 text-gray-500 border border-white/10' : 'bg-red-500/20 text-red-400 border border-red-500/30') + '">False</span></div>';
 } else if (q.jenis === 'short') {
 h += '<div class="pl-11 mb-4"><span class="text-xs text-gray-500">Kunci:</span> <span class="text-sm font-mono text-green-400 ml-2">' + esc(q.kunci_jawaban) + '</span></div>';
 } else if (q.jenis === 'menjodohkan') {
@@ -1656,16 +1646,26 @@ var sum = nilaiArr.reduce(function(a, b) { return a + b; }, 0); var avg = Math.r
 var max = Math.max.apply(null, nilaiArr); var min = Math.min.apply(null, nilaiArr);
 var lulus = nilaiArr.filter(function(n) { return n >= 70; }).length; var tLulus = Math.round(lulus / total * 100);
 stEl.innerHTML = '<div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-4"><div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-blue-400">' + total + '</div><div class="text-xs text-gray-400">Peserta</div></div><div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-purple-400">' + avg + '</div><div class="text-xs text-gray-400">Rata-rata</div></div><div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-green-400">' + max + '</div><div class="text-xs text-gray-400">Tertinggi</div></div><div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-red-400">' + min + '</div><div class="text-xs text-gray-400">Terendah</div></div><div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-cyan-400">' + tLulus + '%</div><div class="text-xs text-gray-400">Lulus (>=70)</div></div></div>';
-ct.innerHTML = '<div class="glass rounded-xl overflow-x-auto"><table class="w-full text-sm"><thead class="bg-white/5"><tr><th class="px-4 py-3 text-left text-gray-400 w-10">No</th><th class="px-4 py-3 text-left text-gray-400">NIS</th><th class="px-4 py-3 text-left text-gray-400">Nama</th><th class="px-4 py-3 text-left text-gray-400">Kelas</th><th class="px-4 py-3 text-left text-gray-400">Ujian</th><th class="px-4 py-3 text-center text-gray-400">Nilai</th><th class="px-4 py-3 text-center text-gray-400">%</th><th class="px-4 py-3 text-center text-gray-400">Grade</th><th class="px-4 py-3 text-left text-gray-400">Status</th><th class="px-4 py-3 text-left text-gray-400">Waktu</th></tr></thead><tbody>' +
+ct.innerHTML = '<div class="glass rounded-xl overflow-x-auto"><table class="w-full text-sm"><thead class="bg-white/5"><tr><th class="px-4 py-3 text-left text-gray-400 w-10">No</th><th class="px-4 py-3 text-left text-gray-400">NIS</th><th class="px-4 py-3 text-left text-gray-400">Nama</th><th class="px-4 py-3 text-left text-gray-400">Kelas</th><th class="px-4 py-3 text-left text-gray-400">Ujian</th><th class="px-4 py-3 text-center text-gray-400">Nilai</th><th class="px-4 py-3 text-center text-gray-400">%</th><th class="px-4 py-3 text-center text-gray-400">Grade</th><th class="px-4 py-3 text-left text-gray-400">Status</th><th class="px-4 py-3 text-left text-gray-400">Waktu</th><th class="px-4 py-3 text-left text-gray-400">Aksi</th></tr></thead><tbody>' +
 rows.map(function(n, i) {
 var sc = parseInt(n.persentase) || 0; var gr = sc >= 90 ? 'A' : sc >= 80 ? 'B' : sc >= 70 ? 'C' : 'D';
 var scC = sc >= 90 ? 'text-green-400' : sc >= 80 ? 'text-blue-400' : sc >= 70 ? 'text-yellow-400' : 'text-red-400';
 var grC = sc >= 90 ? 'bg-green-500/20 text-green-400' : sc >= 80 ? 'bg-blue-500/20 text-blue-400' : sc >= 70 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-red-500/20 text-red-400';
 var stT = n.status === 'perlu_penilaian' ? '<span class="text-xs text-yellow-400">Essay belum dinilai</span>' : '<span class="text-xs text-green-400">Selesai</span>';
 var waktu = n.waktu_selesai ? n.waktu_selesai.replace('T', ' ').substring(0, 16) : '-';
-return '<tr class="border-t border-white/5 hover:bg-white/5"><td class="px-4 py-3 text-gray-500">' + (i+1) + '</td><td class="px-4 py-3 text-gray-400 font-mono text-xs">' + esc(n.nis || '-') + '</td><td class="px-4 py-3 font-medium">' + esc(n.siswa_nama || n.nama || '-') + '</td><td class="px-4 py-3 text-gray-400">' + esc(n.kelas || '-') + '</td><td class="px-4 py-3 text-gray-300 text-xs">' + esc(n.ujian_nama || '-') + '</td><td class="px-4 py-3 text-center font-bold ' + scC + '">' + esc(n.nilai || '0') + '</td><td class="px-4 py-3 text-center font-bold ' + scC + '">' + sc + '</td><td class="px-4 py-3 text-center"><span class="text-xs px-2 py-0.5 rounded-full ' + grC + ' font-bold">' + gr + '</span></td><td class="px-4 py-3">' + stT + '</td><td class="px-4 py-3 text-xs text-gray-500">' + waktu + '</td></tr>';
+return '<tr class="border-t border-white/5 hover:bg-white/5"><td class="px-4 py-3 text-gray-500">' + (i+1) + '</td><td class="px-4 py-3 text-gray-400 font-mono text-xs">' + esc(n.nis || '-') + '</td><td class="px-4 py-3 font-medium">' + esc(n.siswa_nama || n.nama || '-') + '</td><td class="px-4 py-3 text-gray-400">' + esc(n.kelas || '-') + '</td><td class="px-4 py-3 text-gray-300 text-xs">' + esc(n.ujian_nama || '-') + '</td><td class="px-4 py-3 text-center font-bold ' + scC + '">' + esc(n.nilai || '0') + '</td><td class="px-4 py-3 text-center font-bold ' + scC + '">' + sc + '</td><td class="px-4 py-3 text-center"><span class="text-xs px-2 py-0.5 rounded-full ' + grC + ' font-bold">' + gr + '</span></td><td class="px-4 py-3">' + stT + '</td><td class="px-4 py-3 text-xs text-gray-500">' + waktu + '</td><td class="px-4 py-3 whitespace-nowrap"><button onclick="DH.resetAttempt(\'' + n.id + '\')" class="text-yellow-400 text-xs hover:underline">Reset</button></td></tr>';
 }).join('') + '</tbody></table></div>'; ic();
 }).catch(function(e) { ct.innerHTML = '<p class="text-red-400">' + esc(e) + '</p>'; ic(); });
+},
+resetAttempt: function(nilaiId) {
+  if (!confirm('Reset percobaan ujian siswa ini? Siswa akan bisa mengulang ujian dari awal.')) return;
+  toast('Mereset...', 'warning');
+  G('resetExamAttempt', { nilai_id: nilaiId }).then(function(r) {
+    if (!r.s) { toast(r.error || 'Gagal reset', 'error'); return; }
+    toast(r.m || 'Berhasil direset. Siswa dapat mengulang ujian.');
+    flushCache();
+    DH.rekapLoad();
+  }).catch(function(e) { toast(String(e), 'error'); });
 },
 rekapDL: function() {
 var fUjian = document.getElementById('rk_ujian').value; var fKelas = document.getElementById('rk_kelas').value; var fSiswa = document.getElementById('rk_siswa').value;
@@ -1705,7 +1705,7 @@ var jns = r ? r.jenis : 'pg';
 var h = '<h3 class="text-lg font-bold mb-4">' + (r ? 'Edit' : 'Tambah') + ' Soal</h3>';
 h += '<form onsubmit="return DH.sS(event,' + (r ? "'" + r.id + "'" : 'null') + ')"><div class="space-y-4">';
 h += '<div><label class="text-xs text-gray-400 block mb-1">Jenis Soal</label><select name="jenis" onchange="_sfCh(this.value)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500">';
-var jenisList = [{ v: 'pg', l: 'Pilihan Ganda' }, { v: 'bs', l: 'Benar/Salah' }, { v: 'short', l: 'Isian Singkat' }, { v: 'essay', l: 'Essay' }, { v: 'menjodohkan', l: 'Menjodohkan' }, { v: 'menyusun', l: 'Menyusun' }];
+var jenisList = [{ v: 'pg', l: 'Pilihan Ganda' }, { v: 'bs', l: 'True/False' }, { v: 'short', l: 'Isian Singkat' }, { v: 'essay', l: 'Essay' }, { v: 'menjodohkan', l: 'Menjodohkan' }, { v: 'menyusun', l: 'Menyusun' }];
 jenisList.forEach(function(o) { h += '<option value="' + o.v + '" ' + (jns === o.v ? 'selected' : '') + '>' + o.l + '</option>'; });
 h += '</select></div><div><label class="text-xs text-gray-400 block mb-1">Teks Soal</label><textarea name="teks" rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500" required>' + (r ? esc(r.teks) : '') + '</textarea></div><div><label class="text-xs text-gray-400 block mb-1">Gambar Soal</label><input type="hidden" name="gambar" id="sf_gambar" value="' + (r ? esc(r.gambar || '') : '') + '"><button type="button" onclick="upImg(\'sf\')" class="glass px-4 py-2 rounded-lg text-sm hover:bg-white/10">Upload Gambar</button><div id="sf_preview" class="mt-2" style="display:none">' + (r && r.gambar ? _imgPrevHTML(r.gambar, 'sf') : '') + '</div></div><div id="sf_extra"></div><div><label class="text-xs text-gray-400 block mb-1">Skor Maksimal</label><input name="skor" type="number" value="' + (r ? r.skor_max || 1 : 1) + '" min="1" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500"></div></div><button type="submit" class="w-full bp py-3 rounded-xl font-semibold mt-6">Simpan</button></form>';
 shM('mg'); document.getElementById('mb').innerHTML = h; _sfCh(jns, r); ic();
@@ -1722,9 +1722,9 @@ h += '<div><label class="text-xs text-gray-400 block mb-1">Kunci Jawaban</label>
 ['A', 'B', 'C', 'D'].forEach(function(lb) { h += '<option value="' + lb + '" ' + (r && r.kunci_jawaban === lb ? 'selected' : '') + '>' + lb + '</option>'; });
 h += '</select></div></div>';
 } else if (jns === 'bs') {
-h += '<div><label class="text-xs text-gray-400 block mb-1">Kunci Jawaban</label><select name="kunci" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500">';
-['Benar', 'Salah'].forEach(function(o) { h += '<option value="' + o + '" ' + (r && r.kunci_jawaban === o ? 'selected' : '') + '>' + o + '</option>'; });
-h += '</select></div>';
+  h += '<div><label class="text-xs text-gray-400 block mb-1">Kunci Jawaban</label><select name="kunci" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500">';
+  ['True', 'False'].forEach(function(o) { h += '<option value="' + o + '" ' + (r && r.kunci_jawaban === o ? 'selected' : '') + '>' + o + '</option>'; });
+  h += '</select></div>';
 } else if (jns === 'short') {
 h += '<div><label class="text-xs text-gray-400 block mb-1">Kunci Jawaban</label><input name="kunci" value="' + (r ? esc(r.kunci_jawaban || '') : '') + '" placeholder="Jawaban singkat" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500"></div>';
 } else if (jns === 'menjodohkan') {
@@ -1815,11 +1815,11 @@ var lb = lbArr[oi]; var isSel = sel === lb;
 return '<div onclick="EX.selO(\'' + q.id + '\',\'' + lb + '\')" class="oc flex items-start gap-3 p-4 rounded-xl border-2 ' + (isSel ? 'border-purple-500 bg-purple-500/15' : 'border-white/10 bg-white/5 hover:border-purple-500/50') + '"><span class="w-8 h-8 rounded-lg ' + (isSel ? 'bg-purple-500 text-white' : 'bg-white/10 text-gray-400') + ' flex items-center justify-center text-sm font-bold shrink-0">' + lb + '</span><div class="text-sm flex-1 w-full">' + rO(o.t, o.img) + '</div></div>';
 }).join('') + '</div>';
 } else if (q.jenis === 'bs') {
-var sel = EX.answers[q.id] || '';
-['Benar', 'Salah'].forEach(function(o) {
-var isSel = sel === o; var cl = o === 'Benar' ? 'green' : 'red';
-h += '<div onclick="EX.selO(\'' + q.id + '\',\'' + o + '\')" class="oc mb-3 p-4 rounded-xl border-2 ' + (isSel ? 'border-' + cl + '-500 bg-' + cl + '-500/15' : 'border-white/10 bg-white/5 hover:border-' + cl + '-500/50') + ' text-center font-semibold text-sm ' + (isSel ? 'text-' + cl + '-300' : 'text-gray-300') + '">' + o + '</div>';
-});
+  var sel = EX.answers[q.id] || '';
+  ['True', 'False'].forEach(function(o) {
+    var isSel = sel === o; var cl = o === 'True' ? 'green' : 'red';
+    h += '<div onclick="EX.selO(\'' + q.id + '\',\'' + o + '\')" class="oc mb-3 p-4 rounded-xl border-2 ' + (isSel ? 'border-' + cl + '-500 bg-' + cl + '-500/15' : 'border-white/10 bg-white/5 hover:border-' + cl + '-500/50') + ' text-center font-semibold text-sm ' + (isSel ? 'text-' + cl + '-300' : 'text-gray-300') + '">' + o + '</div>';
+  });
 } else if (q.jenis === 'short') {
 h += '<input type="text" value="' + esc(EX.answers[q.id] || '') + '" oninput="EX.answers[\'' + q.id + '\']=this.value;EX.renderNav()" placeholder="Tulis jawaban..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500">';
 } else if (q.jenis === 'essay') {
@@ -1957,11 +1957,17 @@ finalAnswers[qid] = ans;
 }
 }
 G('submitExam', {
-ujian_id: EX.ujian.id, siswa_id: U.id,
-jawaban: JSON.stringify(finalAnswers),
-waktu_mulai: new Date(EX.st).toISOString(),
-waktu_selesai: new Date().toISOString(),
-token: EX.token, pelanggaran: EX.vc
+  ujian_id: EX.ujian.id, 
+  siswa_id: U.id,
+  // ✅ TAMBAHKAN 3 BARIS INI AGAR DATA TERKIRIM DENGAN BENAR
+  siswa_nama: U.nama,
+  nis: U.username, 
+  kelas: U.kelas,
+  jawaban: JSON.stringify(finalAnswers),
+  waktu_mulai: new Date(EX.st).toISOString(),
+  waktu_selesai: new Date().toISOString(),
+  token: EX.token, 
+  pelanggaran: EX.vc
 }).then(function(r) {
 if (!r.s) {
 if (eq) eq.innerHTML = '<div class="gs rounded-xl p-8 text-center"><p class="text-red-400 text-lg mb-4">' + esc(r.error) + '</p><button onclick="AU.out()" class="bp px-6 py-3 rounded-xl font-semibold">Kembali</button></div>';
@@ -2048,15 +2054,13 @@ if (ld) { ld.style.opacity = '0'; setTimeout(function() { ld.remove(); }, 500); 
 }, 800);
 });
 function forceReload() {
-	// Hapus semua cache
-	if ('caches' in window) {
-		caches.keys().then(function(names) {
-			names.forEach(function(name) { caches.delete(name); });
-		});
-	}
-	// Tambahkan timestamp ke URL untuk paksa reload
-	var newUrl = window.location.href.split('?')[0] + '?v=' + Date.now();
-	window.location.replace(newUrl);
+if ('caches' in window) {
+caches.keys().then(function(names) {
+names.forEach(function(name) { caches.delete(name); });
+});
+}
+var newUrl = window.location.href.split('?')[0] + '?v=' + Date.now();
+window.location.replace(newUrl);
 }
 </script>
 </body>
