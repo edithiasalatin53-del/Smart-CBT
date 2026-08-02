@@ -269,7 +269,7 @@ body.exam-active textarea,body.exam-active input[type="text"]{user-select:text!i
 <div id="print-area" class="print-area hidden"></div>
 </div>
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbyF2OQk4Be1jHvN2x7ujkSiYXaOZ6i8THtaVmdjPOz5pktAAS2jnf7ng8sRcrB3R3Ln/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbxGVZF44NT7h5VDBgFRiarT45TM4Pu2qgSQazwyE3HXPDDsKhOfnJV8AqaqBE7j8Q8-/exec';
 var LM = {
 layouts: ['sl', 'sd', 'se'],
 hideAll: function() {
@@ -527,16 +527,30 @@ errEl.textContent = 'Koneksi gagal: ' + String(err); errEl.classList.remove('hid
 return false;
 },
 out: function() {
-U = null;
-if (EX.timer) clearInterval(EX.timer);
-cAC(); flushCache();
-EX.ujian = null; EX.soal = []; EX.answers = {}; EX.ragu = {}; EX.cur = 0;
-EX.tl = 0; EX.timer = null; EX.paused = false; EX.viols = []; EX.vc = 0;
-EX._submitted = false; EX.mS = {}; EX.oS = {}; EX.mapJawaban = {}; EX.mapKanan = {}; EX.mapSusun = {};
-LM.hideAll(); document.body.classList.remove('exam-active');
-var sl = document.getElementById('sl');
-if (sl) { sl.classList.remove('hidden'); sl.style.display = ''; }
-ic();
+  U = null;
+  if (EX.timer) clearInterval(EX.timer);
+  cAC(); flushCache();
+  EX.ujian = null; EX.soal = []; EX.answers = {}; EX.ragu = {}; EX.cur = 0;
+  EX.tl = 0; EX.timer = null; EX.paused = false; EX.viols = []; EX.vc = 0;
+  EX._submitted = false; EX.mS = {}; EX.oS = {}; EX.mapJawaban = {}; EX.mapKanan = {}; EX.mapSusun = {};
+  LM.hideAll(); document.body.classList.remove('exam-active');
+  
+  // ✅ 3. KELUAR DARI FULLSCREEN & UNLOCK ORIENTASI SAAT KELUAR
+  if (document.exitFullscreen) { 
+    document.exitFullscreen().catch(function(){}); 
+  } else if (document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) {
+    document.msExitFullscreen();
+  }
+  
+  if (screen.orientation && screen.orientation.unlock) { 
+    screen.orientation.unlock(); 
+  }
+
+  var sl = document.getElementById('sl');
+  if (sl) { sl.classList.remove('hidden'); sl.style.display = ''; }
+  ic();
 }
 };
 function goDash() {
@@ -583,31 +597,60 @@ ic();
 }
 var DH = {
 home: function() {
-var ct = document.getElementById('dc');
-document.getElementById('dsc').textContent = 'Selamat datang, ' + esc(U.nama);
-G('getStats', { role: U.role, userId: U.id, kelas: U.kelas }).then(function(r) {
-if (!r.s) { ct.innerHTML = '<p class="text-red-400">' + esc(r.error) + '</p>'; return; }
-var d = r.d; var cards = '';
-if (U.role === 'admin' || U.role === 'operator') {
-cards = '<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">' +
-'<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-blue-400">' + d.totalSiswa + '</div><div class="text-xs text-gray-400">Siswa</div></div>' +
-'<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-purple-400">' + d.totalGuru + '</div><div class="text-xs text-gray-400">Guru</div></div>' +
-'<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-cyan-400">' + (d.totalUjian || 0) + '</div><div class="text-xs text-gray-400">Ujian</div></div>' +
-'<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-green-400">' + d.rataRata + '</div><div class="text-xs text-gray-400">Rata-rata</div></div></div>';
-} else if (U.role === 'guru') {
-cards = '<div class="grid grid-cols-3 gap-4 mb-8">' +
-'<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-blue-400">' + d.totalUjian + '</div><div class="text-xs text-gray-400">Ujian</div></div>' +
-'<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-purple-400">' + d.rataRata + '</div><div class="text-xs text-gray-400">Rata-rata</div></div>' +
-'<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-green-400">' + (d.totalNilai || 0) + '</div><div class="text-xs text-gray-400">Nilai</div></div></div>';
-} else {
-cards = '<div class="grid grid-cols-3 gap-4 mb-8">' +
-'<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-blue-400">' + (d.ujianAktif || 0) + '</div><div class="text-xs text-gray-400">Tersedia</div></div>' +
-'<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-purple-400">' + d.rataRata + '</div><div class="text-xs text-gray-400">Rata-rata</div></div>' +
-'<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-green-400">' + (d.totalNilai || 0) + '</div><div class="text-xs text-gray-400">Selesai</div></div></div>';
-}
-ct.innerHTML = cards + '<div id="hex"></div>';
-if (U.role === 'siswa') DH._homeSiswa(); else DH._homeParent();
-}).catch(function(e) { ct.innerHTML = '<p class="text-red-400">Error: ' + esc(e) + '</p>'; });
+  var ct = document.getElementById('dc');
+  document.getElementById('dsc').textContent = 'Selamat datang, ' + esc(U.nama);
+  G('getStats', { role: U.role, userId: U.id, kelas: U.kelas }).then(function(r) {
+    if (!r.s) { ct.innerHTML = '<p class="text-red-400">' + esc(r.error) + '</p>'; return; }
+    var d = r.d; var cards = '';
+    if (U.role === 'admin' || U.role === 'operator') {
+      cards = '<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">' +
+        '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-blue-400">' + d.totalSiswa + '</div><div class="text-xs text-gray-400">Siswa</div></div>' +
+        '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-purple-400">' + d.totalGuru + '</div><div class="text-xs text-gray-400">Guru</div></div>' +
+        '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-cyan-400">' + (d.totalUjian || 0) + '</div><div class="text-xs text-gray-400">Ujian</div></div>' +
+        '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-green-400">' + d.rataRata + '</div><div class="text-xs text-gray-400">Rata-rata Skor</div></div></div>';
+    } else if (U.role === 'guru') {
+      cards = '<div class="grid grid-cols-3 gap-4 mb-8">' +
+        '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-blue-400">' + d.totalUjian + '</div><div class="text-xs text-gray-400">Ujian</div></div>' +
+        '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-purple-400">' + d.rataRata + '</div><div class="text-xs text-gray-400">Rata-rata Skor</div></div>' +
+        '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-green-400">' + (d.totalNilai || 0) + '</div><div class="text-xs text-gray-400">Nilai</div></div></div>';
+    } else {
+      cards = '<div class="grid grid-cols-3 gap-4 mb-8">' +
+        '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-blue-400">' + (d.ujianAktif || 0) + '</div><div class="text-xs text-gray-400">Tersedia</div></div>' +
+        '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-purple-400">' + d.rataRata + '</div><div class="text-xs text-gray-400">Rata-rata Skor</div></div>' +
+        '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-green-400">' + (d.totalNilai || 0) + '</div><div class="text-xs text-gray-400">Selesai</div></div></div>';
+    }
+    
+    // ✅ TAMBAHAN: Tampilkan breakdown rata-rata PER UJIAN
+    var perUjianHTML = '';
+    if (d.perUjian && d.perUjian.length) {
+      var ujianAktif = d.perUjian.filter(function(u) { return u.jumlah_peserta > 0; });
+      if (ujianAktif.length) {
+        perUjianHTML = '<div class="gs rounded-xl p-6 mt-6"><h3 class="font-semibold mb-4 flex items-center gap-2"><i data-lucide="bar-chart-3" class="w-5 h-5 text-purple-400"></i>Rata-rata Skor per Ujian</h3>' +
+          '<div class="space-y-3">' +
+          ujianAktif.map(function(u) {
+            var pctWidth = Math.min((u.rata_rata_skor / 100) * 100, 100);
+            var barColor = u.rata_rata_skor >= 80 ? 'bg-green-500' : u.rata_rata_skor >= 70 ? 'bg-yellow-500' : 'bg-red-500';
+            var txtColor = u.rata_rata_skor >= 80 ? 'text-green-400' : u.rata_rata_skor >= 70 ? 'text-yellow-400' : 'text-red-400';
+            return '<div class="bg-white/5 rounded-xl p-4">' +
+              '<div class="flex items-center justify-between mb-2">' +
+              '<div class="flex-1 min-w-0">' +
+              '<div class="font-medium text-sm truncate">' + esc(u.ujian_nama) + '</div>' +
+              '<div class="text-xs text-gray-400">' + esc(u.kelas_nama) + ' • ' + u.jumlah_peserta + ' peserta</div>' +
+              '</div>' +
+              '<div class="text-2xl font-extrabold ' + txtColor + ' ml-4">' + u.rata_rata_skor + '</div>' +
+              '</div>' +
+              '<div class="h-2 bg-white/10 rounded-full overflow-hidden">' +
+              '<div class="h-full rounded-full ' + barColor + '" style="width:' + pctWidth + '%"></div>' +
+              '</div>' +
+              '</div>';
+          }).join('') +
+          '</div></div>';
+      }
+    }
+    
+    ct.innerHTML = cards + '<div id="hex"></div>' + perUjianHTML;
+    if (U.role === 'siswa') DH._homeSiswa(); else DH._homeParent();
+  }).catch(function(e) { ct.innerHTML = '<p class="text-red-400">Error: ' + esc(e) + '</p>'; });
 },
 _homeSiswa: function() {
   Promise.all([
@@ -1208,16 +1251,23 @@ var firstSheet = workbook.Sheets[workbook.SheetNames[0]];
 var jsonData = XLSX.utils.sheet_to_json(firstSheet);
 if (!jsonData.length) { toast('File kosong', 'error'); return; }
 var soalList = jsonData.map(function(row) {
-return {
-teks: row['teks'] || row['Teks'] || row['Soal'] || '',
-jenis: (row['jenis'] || row['Jenis'] || 'pg').toLowerCase(),
-opsi_a: row['opsi_a'] || row['A'] || '',
-opsi_b: row['opsi_b'] || row['B'] || '',
-opsi_c: row['opsi_c'] || row['C'] || '',
-opsi_d: row['opsi_d'] || row['D'] || '',
-kunci_jawaban: row['kunci_jawaban'] || row['Kunci'] || '',
-skor_max: row['skor_max'] || row['Skor'] || 1
-};
+  // Normalisasi jenis soal agar 'true/false', 'benar/salah', atau 'tf' otomatis jadi 'bs'
+  var rawJenis = String(row['jenis'] || row['Jenis'] || 'pg').toLowerCase().trim();
+  var finalJenis = rawJenis;
+  if (rawJenis === 'true/false' || rawJenis === 'benar/salah' || rawJenis === 'tf' || rawJenis === 'b/s') {
+    finalJenis = 'bs';
+  }
+
+  return {
+    teks: row['teks'] || row['Teks'] || row['Soal'] || '',
+    jenis: finalJenis, // Gunakan jenis yang sudah dinormalisasi
+    opsi_a: row['opsi_a'] || row['A'] || '',
+    opsi_b: row['opsi_b'] || row['B'] || '',
+    opsi_c: row['opsi_c'] || row['C'] || '',
+    opsi_d: row['opsi_d'] || row['D'] || '',
+    kunci_jawaban: String(row['kunci_jawaban'] || row['Kunci'] || '').trim(), // Pastikan tidak ada spasi
+    skor_max: row['skor_max'] || row['Skor'] || 1
+  };
 }).filter(function(s) { return s.teks; });
 if (!soalList.length) { toast('Tidak ada soal valid', 'error'); return; }
 shM('mg');
@@ -1399,13 +1449,23 @@ var qs = grouped[type]; var totalBenar = 0, totalSalah = 0, totalBelum = 0; var 
 qs.forEach(function(q) {
 var benar = 0, salah = 0, belum = 0;
 students.forEach(function(st) {
-var ans = {}; try { ans = JSON.parse(st.jawaban || '{}'); } catch(e) { ans = {}; }
-var sa = ans[q.id]; if (!sa || sa === '') { belum++; return; }
-var correct = false;
-if (q.jenis === 'pg' || q.jenis === 'bs') correct = (sa === q.kunci_jawaban);
-else if (q.jenis === 'short') correct = (sa.toLowerCase() === String(q.kunci_jawaban).toLowerCase());
-else correct = (sa === q.kunci_jawaban);
-if (correct) benar++; else salah++;
+  var ans = {}; try { ans = JSON.parse(st.jawaban || '{}'); } catch(e) { ans = {}; }
+  var sa = ans[q.id]; if (!sa || sa === '') { belum++; return; }
+  
+  var correct = false;
+  var jenisNorm = (q.jenis || '').toLowerCase().trim();
+  var userAns = String(sa).trim().toLowerCase();
+  var keyAns = String(q.kunci_jawaban).trim().toLowerCase();
+
+  if (jenisNorm === 'pg' || jenisNorm === 'bs' || jenisNorm === 'true/false' || jenisNorm === 'benar/salah') {
+    correct = (userAns === keyAns);
+  } else if (jenisNorm === 'short') {
+    correct = (userAns === keyAns);
+  } else {
+    correct = (String(sa).trim() === String(q.kunci_jawaban).trim());
+  }
+  
+  if (correct) benar++; else salah++;
 });
 totalBenar += benar; totalSalah += salah; totalBelum += belum;
 var pct = students.length > 0 ? Math.round(benar / students.length * 100) : 0;
@@ -1475,23 +1535,26 @@ DH.lAn(ur.d[0].id); ic();
 }).catch(function(e) { ct.innerHTML = '<p class="text-red-400">' + esc(e) + '</p>'; });
 },
 lAn: function(uid) {
-var el = document.getElementById('anct'); el.innerHTML = ldH();
-G('getAnalisis', { ujian_id: uid })
-.then(function(r) {
-if (!r.s) { el.innerHTML = '<p class="text-red-400">' + esc(r.error) + '</p>'; ic(); return; }
-var s = r.d.statistik; var j = Math.max(s.jumlah || 1, 1);
-var barClsMap = { green: 'bg-green-500', blue: 'bg-blue-500', yellow: 'bg-yellow-500', red: 'bg-red-500' };
-var txtClsMap = { green: 'text-green-400', blue: 'text-blue-400', yellow: 'text-yellow-400', red: 'text-red-400' };
-var bars = [{ l: 'A (90-100)', c: 'green', v: s.distribusi.A }, { l: 'B (80-89)', c: 'blue', v: s.distribusi.B }, { l: 'C (70-79)', c: 'yellow', v: s.distribusi.C }, { l: 'D (<70)', c: 'red', v: s.distribusi.D }];
-el.innerHTML = '<div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">' +
-'<div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-blue-400">' + s.jumlah + '</div><div class="text-xs text-gray-400">Peserta</div></div>' +
-'<div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-green-400">' + s.rata_rata + '</div><div class="text-xs text-gray-400">Rata-rata</div></div>' +
-'<div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-cyan-400">' + s.tertinggi + '</div><div class="text-xs text-gray-400">Tertinggi</div></div>' +
-'<div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-yellow-400">' + s.terendah + '</div><div class="text-xs text-gray-400">Terendah</div></div>' +
-'<div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-purple-400">' + s.distribusi.A + '</div><div class="text-xs text-gray-400">Nilai A</div></div></div>' +
-'<div class="gs rounded-xl p-6"><h3 class="font-semibold mb-5">Distribusi Nilai</h3><div class="space-y-4">' +
-bars.map(function(d) { return '<div><div class="flex justify-between text-sm mb-1"><span>' + d.l + '</span><span class="' + (txtClsMap[d.c] || 'text-gray-400') + '">' + d.v + '</span></div><div class="h-3 bg-white/10 rounded-full overflow-hidden"><div class="h-full rounded-full ' + (barClsMap[d.c] || 'bg-gray-500') + '" style="width:' + Math.max(d.v / j * 100, 0) + '%"></div></div></div>'; }).join('') + '</div></div>'; ic();
-}).catch(function(e) { el.innerHTML = '<p class="text-red-400">' + esc(e) + '</p>'; ic(); });
+  var el = document.getElementById('anct'); el.innerHTML = ldH();
+  G('getAnalisis', { ujian_id: uid })
+  .then(function(r) {
+    if (!r.s) { el.innerHTML = '<p class="text-red-400">' + esc(r.error) + '</p>'; ic(); return; }
+    var s = r.d.statistik; var j = Math.max(s.jumlah || 1, 1);
+    var barClsMap = { green: 'bg-green-500', blue: 'bg-blue-500', yellow: 'bg-yellow-500', red: 'bg-red-500' };
+    var txtClsMap = { green: 'text-green-400', blue: 'text-blue-400', yellow: 'text-yellow-400', red: 'text-red-400' };
+    var bars = [{ l: 'A (90-100%)', c: 'green', v: s.distribusi.A }, { l: 'B (80-89%)', c: 'blue', v: s.distribusi.B }, { l: 'C (70-79%)', c: 'yellow', v: s.distribusi.C }, { l: 'D (<70%)', c: 'red', v: s.distribusi.D }];
+    
+    // ✅ TAMPILAN BARU: Rata-rata dalam SKOR, bukan persentase
+    el.innerHTML = '<div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">' +
+      '<div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-blue-400">' + s.jumlah + '</div><div class="text-xs text-gray-400">Peserta</div></div>' +
+      '<div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-green-400">' + s.rata_rata + '</div><div class="text-xs text-gray-400">Rata-rata Skor</div></div>' +
+      '<div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-cyan-400">' + s.tertinggi + '</div><div class="text-xs text-gray-400">Skor Tertinggi</div></div>' +
+      '<div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-yellow-400">' + s.terendah + '</div><div class="text-xs text-gray-400">Skor Terendah</div></div>' +
+      '<div class="glass rounded-xl p-4 text-center"><div class="text-2xl font-bold text-purple-400">' + s.rata_rata_persen + '%</div><div class="text-xs text-gray-400">Rata-rata %</div></div></div>' +
+      '<div class="gs rounded-xl p-6"><h3 class="font-semibold mb-5">Distribusi Grade (berdasarkan persentase)</h3><div class="space-y-4">' +
+      bars.map(function(d) { return '<div><div class="flex justify-between text-sm mb-1"><span>' + d.l + '</span><span class="' + (txtClsMap[d.c] || 'text-gray-400') + '">' + d.v + '</span></div><div class="h-3 bg-white/10 rounded-full overflow-hidden"><div class="h-full rounded-full ' + (barClsMap[d.c] || 'bg-gray-500') + '" style="width:' + Math.max(d.v / j * 100, 0) + '%"></div></div></div>'; }).join('') + '</div></div>'; 
+    ic();
+  }).catch(function(e) { el.innerHTML = '<p class="text-red-400">' + esc(e) + '</p>'; ic(); });
 },
 jadwal: function() {
   var ct = document.getElementById('dc');
@@ -1510,25 +1573,68 @@ jadwal: function() {
   }).catch(function(e) { ct.innerHTML = '<p class="text-red-400">' + esc(e) + '</p>'; ic(); });
 },
 nilai: function() {
-var ct = document.getElementById('dc');
-G('getNilai', { filters: { siswa_id: U.id } })
-.then(function(r) {
-var rows = r.d || [];
-ct.innerHTML = rows.length ? '<div class="space-y-3">' + rows.map(function(n) {
-var sc = parseInt(n.persentase) || 0;
-var cl = sc >= 90 ? 'text-green-400' : sc >= 80 ? 'text-blue-400' : sc >= 70 ? 'text-yellow-400' : 'text-red-400';
-return '<div class="gs rounded-xl p-5 flex items-center justify-between"><div><div class="font-medium">' + esc(n.ujian_nama) + '</div><div class="text-xs text-gray-400 mt-1">' + (n.waktu_selesai ? n.waktu_selesai.split('T')[0] : '-') + (n.status === 'perlu_penilaian' ? ' <span class="text-yellow-400">&mdash; Essay belum dinilai</span>' : '') + '</div></div><div class="text-3xl font-extrabold ' + cl + '">' + sc + '</div></div>';
-}).join('') + '</div>' : '<div class="gs rounded-xl p-8 text-center text-gray-400">Kosong</div>'; ic();
-}).catch(function(e) { ct.innerHTML = '<p class="text-red-400">' + esc(e) + '</p>'; ic(); });
+  var ct = document.getElementById('dc');
+  G('getNilai', { filters: { siswa_id: U.id } })
+  .then(function(r) {
+    var rows = r.d || [];
+    ct.innerHTML = rows.length ? '<div class="space-y-3">' + rows.map(function(n) {
+      // ✅ Hitung skor total (bukan persentase)
+      var skor = (parseInt(n.nilai_otomatis) || 0) + (parseInt(n.nilai_essay) || 0);
+      var sc = parseInt(n.persentase) || 0;
+      var cl = sc >= 90 ? 'text-green-400' : sc >= 80 ? 'text-blue-400' : sc >= 70 ? 'text-yellow-400' : 'text-red-400';
+      return '<div class="gs rounded-xl p-5 flex items-center justify-between">' +
+        '<div class="flex-1 min-w-0">' +
+        '<div class="font-medium truncate">' + esc(n.ujian_nama) + '</div>' +
+        '<div class="text-xs text-gray-400 mt-1">' + 
+        (n.waktu_selesai ? n.waktu_selesai.split('T')[0] : '-') + 
+        (n.status === 'perlu_penilaian' ? ' <span class="text-yellow-400">— Essay belum dinilai</span>' : '') + 
+        '</div></div>' +
+        '<div class="text-right ml-4">' +
+        '<div class="text-3xl font-extrabold ' + cl + '">' + skor + '</div>' +
+        '<div class="text-xs text-gray-500">Benar: ' + (n.benar || 0) + ' | Salah: ' + (n.salah || 0) + '</div>' +
+        '</div></div>';
+    }).join('') + '</div>' : '<div class="gs rounded-xl p-8 text-center text-gray-400">Kosong</div>'; 
+    ic();
+  }).catch(function(e) { ct.innerHTML = '<p class="text-red-400">' + esc(e) + '</p>'; ic(); });
 },
 stats: function() {
-var ct = document.getElementById('dc'); ct.innerHTML = ldH();
-G('getStats', { role: U.role, userId: U.id, kelas: U.kelas })
-.then(function(r) {
-if (!r.s) { ct.innerHTML = '<p class="text-red-400 text-center mt-8">' + esc(r.error) + '</p>'; return; }
-var d = r.d;
-ct.innerHTML = '<div class="grid grid-cols-2 lg:grid-cols-4 gap-4"><div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-blue-400">' + (d.totalSiswa || 0) + '</div><div class="text-xs text-gray-400">Siswa</div></div><div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-purple-400">' + (d.totalGuru || 0) + '</div><div class="text-xs text-gray-400">Guru</div></div><div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-cyan-400">' + (d.totalNilai || 0) + '</div><div class="text-xs text-gray-400">Nilai</div></div><div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-red-400">' + (d.totalPelanggaran || 0) + '</div><div class="text-xs text-gray-400">Pelanggaran</div></div></div>'; ic();
-}).catch(function(e) { ct.innerHTML = '<p class="text-red-400 text-center mt-8">Error: ' + esc(e) + '</p>'; });
+  var ct = document.getElementById('dc'); ct.innerHTML = ldH();
+  G('getStats', { role: U.role, userId: U.id, kelas: U.kelas })
+  .then(function(r) {
+    if (!r.s) { ct.innerHTML = '<p class="text-red-400 text-center mt-8">' + esc(r.error) + '</p>'; return; }
+    var d = r.d;
+    ct.innerHTML = '<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">' +
+      '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-blue-400">' + (d.totalSiswa || 0) + '</div><div class="text-xs text-gray-400">Siswa</div></div>' +
+      '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-purple-400">' + (d.totalGuru || 0) + '</div><div class="text-xs text-gray-400">Guru</div></div>' +
+      '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-cyan-400">' + (d.totalNilai || 0) + '</div><div class="text-xs text-gray-400">Total Nilai</div></div>' +
+      '<div class="glass rounded-xl p-5"><div class="text-2xl font-bold text-green-400">' + (d.rataRata || 0) + '</div><div class="text-xs text-gray-400">Rata-rata Skor</div></div></div>';
+    
+    // ✅ Tampilkan breakdown per ujian
+    if (d.perUjian && d.perUjian.length) {
+      ct.innerHTML += '<div class="gs rounded-xl p-6">' +
+        '<h3 class="font-semibold mb-4 flex items-center gap-2"><i data-lucide="bar-chart-3" class="w-5 h-5 text-purple-400"></i>Statistik per Ujian</h3>' +
+        '<div class="glass rounded-xl overflow-x-auto"><table class="w-full text-sm">' +
+        '<thead class="bg-white/5"><tr>' +
+        '<th class="px-4 py-3 text-left text-gray-400">Ujian</th>' +
+        '<th class="px-4 py-3 text-left text-gray-400">Kelas</th>' +
+        '<th class="px-4 py-3 text-center text-gray-400">Peserta</th>' +
+        '<th class="px-4 py-3 text-center text-gray-400">Rata-rata Skor</th>' +
+        '<th class="px-4 py-3 text-center text-gray-400">Total Skor</th>' +
+        '</tr></thead><tbody>' +
+        d.perUjian.map(function(u) {
+          var rataColor = u.rata_rata_skor >= 80 ? 'text-green-400' : u.rata_rata_skor >= 70 ? 'text-yellow-400' : u.jumlah_peserta === 0 ? 'text-gray-500' : 'text-red-400';
+          return '<tr class="border-t border-white/5 hover:bg-white/5">' +
+            '<td class="px-4 py-3 font-medium">' + esc(u.ujian_nama) + '</td>' +
+            '<td class="px-4 py-3 text-gray-400 text-xs">' + esc(u.kelas_nama) + '</td>' +
+            '<td class="px-4 py-3 text-center">' + u.jumlah_peserta + '</td>' +
+            '<td class="px-4 py-3 text-center font-bold ' + rataColor + '">' + u.rata_rata_skor + '</td>' +
+            '<td class="px-4 py-3 text-center text-gray-300">' + u.total_skor + '</td>' +
+            '</tr>';
+        }).join('') +
+        '</tbody></table></div></div>';
+    }
+    ic();
+  }).catch(function(e) { ct.innerHTML = '<p class="text-red-400 text-center mt-8">Error: ' + esc(e) + '</p>'; });
 },
 preview: function() {
 var ct = document.getElementById('dc'); document.getElementById('dsc').textContent = 'Preview semua soal'; ct.innerHTML = ldH();
@@ -1667,7 +1773,7 @@ G('getNilai', { filters: filters })
 .then(function(r) {
 if (!r.s) { ct.innerHTML = '<p class="text-red-400">' + esc(r.error) + '</p>'; ic(); return; }
 var rows = r.d || []; if (!rows.length) { ct.innerHTML = '<div class="gs rounded-xl p-10 text-center text-gray-500">Tidak ada data</div>'; ic(); return; }
-var total = rows.length; var nilaiArr = rows.map(function(n) { return parseInt(n.persentase) || 0; });
+var total = rows.length; var nilaiArr = rows.map(function(n) { return (parseInt(n.nilai_otomatis) || 0) + (parseInt(n.nilai_essay) || 0); });
 var sum = nilaiArr.reduce(function(a, b) { return a + b; }, 0); var avg = Math.round(sum / total);
 var max = Math.max.apply(null, nilaiArr); var min = Math.min.apply(null, nilaiArr);
 var lulus = nilaiArr.filter(function(n) { return n >= 70; }).length; var tLulus = Math.round(lulus / total * 100);
@@ -1770,16 +1876,39 @@ document.getElementById('te').classList.add('hidden');
 document.getElementById('itk').focus();
 };
 EX.etk = function() {
-var tk = document.getElementById('itk').value.trim().toUpperCase();
-var err = document.getElementById('te'); var btn = document.getElementById('btk');
-if (!tk) { err.textContent = 'Masukkan token'; err.classList.remove('hidden'); return; }
-err.classList.add('hidden'); btn.disabled = true; btn.textContent = 'Menghubungkan...';
-G('joinExam', { token: tk, siswa_id: U.id, siswa_nama: U.nama, kelas: U.kelas || '' })
-.then(function(r) {
-btn.disabled = false; btn.textContent = 'Mulai';
-if (!r.s) { err.textContent = r.error; err.classList.remove('hidden'); return; }
-EX.token = tk; hiM('mt'); EX.start(r.d);
-}).catch(function(e) { btn.disabled = false; btn.textContent = 'Mulai'; err.textContent = String(e); err.classList.remove('hidden'); });
+  var tk = document.getElementById('itk').value.trim().toUpperCase();
+  var err = document.getElementById('te'); var btn = document.getElementById('btk');
+  if (!tk) { err.textContent = 'Masukkan token'; err.classList.remove('hidden'); return; }
+  err.classList.add('hidden'); btn.disabled = true; btn.textContent = 'Menghubungkan...';
+  
+  G('joinExam', { token: tk, siswa_id: U.id, siswa_nama: U.nama, kelas: U.kelas || '' })
+  .then(function(r) {
+    btn.disabled = false; btn.textContent = 'Mulai';
+    if (!r.s) { err.textContent = r.error; err.classList.remove('hidden'); return; }
+    
+    EX.token = tk; 
+    hiM('mt'); 
+    
+    // ✅ 1. PAKSA MODE FULLSCREEN
+    var elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen().catch(function(e) { console.log("Fullscreen error:", e); });
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+      elem.msRequestFullscreen();
+    }
+
+    // ✅ 2. PAKSA MODE LANDSCAPE (Khusus perangkat mobile/tablet)
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape').catch(function(e) { console.log("Orientation lock error:", e); });
+    }
+
+    EX.start(r.d);
+  }).catch(function(e) { 
+    btn.disabled = false; btn.textContent = 'Mulai'; 
+    err.textContent = String(e); err.classList.remove('hidden'); 
+  });
 };
 EX.start = function(data) {
 hiM('mt');
@@ -1948,65 +2077,139 @@ if (EX.tl === 300 && el) el.style.color = '#f87171';
 }, 1000);
 };
 EX.cf = function() {
-var unanswered = EX.soal.filter(function(q) { return !EX.answers[q.id]; }).length;
-var raguC = Object.values(EX.ragu).filter(function(v) { return v; }).length;
-var msg = 'Yakin ingin mengumpulkan?';
-if (unanswered) msg += '\n' + unanswered + ' soal belum dijawab.';
-if (raguC) msg += '\n' + raguC + ' soal ditandai ragu.';
-if (!confirm(msg)) return;
-EX.submit();
+  // ✅ CEK SOAL YANG BELUM DIJAWAB
+  var unansweredQ = [];
+  EX.soal.forEach(function(q, idx) {
+    var ans = EX.answers[q.id];
+    // Anggap belum dijawab jika kosong, undefined, atau string kosong
+    if (!ans || String(ans).trim() === '') {
+      unansweredQ.push(idx + 1); // Simpan nomor soal (1-based)
+    }
+  });
+  
+  var unanswered = unansweredQ.length;
+  var raguC = Object.values(EX.ragu).filter(function(v) { return v; }).length;
+  
+  // ✅ BLOKIR SUBMIT JIKA MASIH ADA SOAL KOSONG
+  if (unanswered > 0) {
+    var mb = document.getElementById('mb');
+    if (mb) {
+      mb.innerHTML = '<div class="text-center">' +
+        '<div class="w-16 h-16 rounded-full bg-yellow-500/20 flex items-center justify-center mx-auto mb-4">' +
+        '<i data-lucide="alert-triangle" class="w-8 h-8 text-yellow-400"></i></div>' +
+        '<h3 class="text-xl font-bold text-yellow-400 mb-2">Masih Ada Soal Belum Dijawab!</h3>' +
+        '<p class="text-sm text-gray-400 mb-4">Anda <strong class="text-white">tidak dapat mengumpulkan</strong> ujian karena masih ada <strong class="text-yellow-300">' + unanswered + ' soal</strong> yang belum dijawab.</p>' +
+        '<div class="bg-white/5 rounded-xl p-4 mb-4 max-h-48 overflow-y-auto">' +
+        '<p class="text-xs text-gray-400 mb-3 text-left">Nomor soal yang belum dijawab:</p>' +
+        '<div class="flex flex-wrap gap-2 justify-center">' +
+        unansweredQ.map(function(n) { 
+          return '<span class="w-9 h-9 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 flex items-center justify-center text-sm font-bold">' + n + '</span>'; 
+        }).join('') +
+        '</div></div>' +
+        (raguC > 0 ? '<p class="text-xs text-yellow-400 mb-3 bg-yellow-500/10 rounded-lg p-2">⚠ Ada ' + raguC + ' soal yang Anda tandai ragu-ragu.</p>' : '') +
+        '<p class="text-xs text-gray-500 mb-4">Silakan klik nomor soal di atas atau periksa kembali seluruh jawaban Anda.</p>' +
+        '<button onclick="hiM(\'mg\')" class="bp px-6 py-3 rounded-xl font-semibold w-full">Periksa Kembali</button>' +
+        '</div>';
+      shM('mg');
+      ic();
+    }
+    return; // ⛔ STOP - JANGAN LANJUT KE SUBMIT
+  }
+  
+  // ✅ SEMUA SOAL SUDAH DIJAWAB - KONFIRMASI TERAKHIR
+  var msg = '✅ Semua soal sudah dijawab.\n\n';
+  if (raguC > 0) {
+    msg += '⚠ Perhatian: Ada ' + raguC + ' soal yang Anda tandai ragu.\n';
+  }
+  msg += 'Yakin ingin mengumpulkan ujian sekarang?';
+  
+  if (!confirm(msg)) return;
+  EX.submit();
 };
 EX.submit = function() {
-if (EX._submitted) return;
-EX._submitted = true;
-if (EX.timer) clearInterval(EX.timer);
-cAC(); LM.hideAll(); document.body.classList.remove('exam-active');
-var se = document.getElementById('se'); if(se) { se.classList.remove('hidden'); se.style.display = 'flex'; }
-var eq = document.getElementById('eq'); if (eq) eq.innerHTML = ldH();
-var finalAnswers = {};
-for (var qid in EX.answers) {
-var ans = EX.answers[qid];
-var q = EX.soal.find(function(x) { return x.id === qid; });
-if (!q) continue;
-if (q.jenis === 'pg' && EX.mapJawaban[qid]) {
-finalAnswers[qid] = EX.mapJawaban[qid][ans] || ans;
-} else if (q.jenis === 'menjodohkan' && EX.mapKanan[qid]) {
-var pairs = ans.split('|').filter(Boolean);
-var translated = pairs.map(function(p) { var parts = p.split(','); return parts[0] + ',' + EX.mapKanan[qid][parts[1]]; });
-finalAnswers[qid] = translated.join('|');
-} else if (q.jenis === 'menyusun' && EX.mapSusun[qid]) {
-var items = ans.split('|').filter(Boolean);
-var translated = items.map(function(idxAcak) { return EX.mapSusun[qid][idxAcak]; });
-finalAnswers[qid] = translated.join('|');
-} else {
-finalAnswers[qid] = ans;
-}
-}
-G('submitExam', {
-  ujian_id: EX.ujian.id, 
-  siswa_id: U.id,
-  // ✅ TAMBAHKAN 3 BARIS INI AGAR DATA TERKIRIM DENGAN BENAR
-  siswa_nama: U.nama,
-  nis: U.username, 
-  kelas: U.kelas,
-  jawaban: JSON.stringify(finalAnswers),
-  waktu_mulai: new Date(EX.st).toISOString(),
-  waktu_selesai: new Date().toISOString(),
-  token: EX.token, 
-  pelanggaran: EX.vc
-}).then(function(r) {
-if (!r.s) {
-if (eq) eq.innerHTML = '<div class="gs rounded-xl p-8 text-center"><p class="text-red-400 text-lg mb-4">' + esc(r.error) + '</p><button onclick="AU.out()" class="bp px-6 py-3 rounded-xl font-semibold">Kembali</button></div>';
-return;
-}
-var d = r.d; var sc = parseInt(d.persentase) || 0;
-var cl = sc >= 90 ? 'text-green-400' : sc >= 80 ? 'text-blue-400' : sc >= 70 ? 'text-yellow-400' : 'text-red-400';
-var gr = sc >= 90 ? 'A' : sc >= 80 ? 'B' : sc >= 70 ? 'C' : 'D';
-if (eq) eq.innerHTML = '<div class="gs rounded-xl p-8 text-center asu"><div class="w-20 h-20 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-6"><i data-lucide="check-circle" class="w-10 h-10 text-green-400"></i></div><h2 class="text-2xl font-bold mb-2">Ujian Selesai!</h2><p class="text-gray-400 mb-6">' + esc(EX.ujian.nama) + '</p><div class="text-6xl font-extrabold ' + cl + ' mb-2">' + sc + '</div><div class="text-sm text-gray-400 mb-1">Grade: <span class="font-bold text-white">' + gr + '</span></div><div class="text-xs text-gray-500 mb-2">Benar: ' + d.benar + ' | Salah: ' + d.salah + ' | Skor: ' + d.nilai + '</div>' + (d.status === 'perlu_penilaian' ? '<p class="text-xs text-yellow-400 mt-2">Essay akan dinilai manual</p>' : '') + '<button onclick="AU.out()" class="bp px-6 py-3 rounded-xl font-semibold mt-6">Kembali</button></div>';
-ic();
-}).catch(function(err) {
-if (eq) eq.innerHTML = '<div class="gs rounded-xl p-8 text-center"><p class="text-red-400 text-lg mb-4">Gagal: ' + esc(err) + '</p><button onclick="AU.out()" class="bp px-6 py-3 rounded-xl font-semibold">Kembali</button></div>';
-});
+  if (EX._submitted) return;
+  EX._submitted = true;
+  if (EX.timer) clearInterval(EX.timer);
+  cAC(); LM.hideAll(); document.body.classList.remove('exam-active');
+  var se = document.getElementById('se'); if(se) { se.classList.remove('hidden'); se.style.display = 'flex'; }
+  var eq = document.getElementById('eq'); if (eq) eq.innerHTML = ldH();
+  
+  var finalAnswers = {};
+  for (var qid in EX.answers) {
+    var ans = EX.answers[qid];
+    var q = EX.soal.find(function(x) { return x.id === qid; });
+    if (!q) continue;
+    if (q.jenis === 'pg' && EX.mapJawaban[qid]) {
+      finalAnswers[qid] = EX.mapJawaban[qid][ans] || ans;
+    } else if (q.jenis === 'menjodohkan' && EX.mapKanan[qid]) {
+      var pairs = ans.split('|').filter(Boolean);
+      var translated = pairs.map(function(p) { var parts = p.split(','); return parts[0] + ',' + EX.mapKanan[qid][parts[1]]; });
+      finalAnswers[qid] = translated.join('|');
+    } else if (q.jenis === 'menyusun' && EX.mapSusun[qid]) {
+      var items = ans.split('|').filter(Boolean);
+      var translated = items.map(function(idxAcak) { return EX.mapSusun[qid][idxAcak]; });
+      finalAnswers[qid] = translated.join('|');
+    } else {
+      finalAnswers[qid] = ans;
+    }
+  }
+  
+  G('submitExam', {
+    ujian_id: EX.ujian.id,
+    siswa_id: U.id,
+    siswa_nama: U.nama,
+    nis: U.username,
+    kelas: U.kelas,
+    jawaban: JSON.stringify(finalAnswers),
+    waktu_mulai: new Date(EX.st).toISOString(),
+    waktu_selesai: new Date().toISOString(),
+    token: EX.token,
+    pelanggaran: EX.vc
+  }).then(function(r) {
+    if (!r.s) {
+      if (eq) eq.innerHTML = '<div class="gs rounded-xl p-8 text-center"><p class="text-red-400 text-lg mb-4">' + esc(r.error) + '</p><button onclick="AU.out()" class="bp px-6 py-3 rounded-xl font-semibold">Kembali</button></div>';
+      return;
+    }
+    
+    var d = r.d;
+    
+    // ✅ LOGIKA TAMPILAN BARU
+    if (d.status === 'perlu_penilaian') {
+      // TAMPILAN JIKA ADA ESSAY YANG BELUM DINILAI
+      if (eq) eq.innerHTML = '<div class="gs rounded-xl p-8 text-center asu">' +
+        '<div class="w-20 h-20 rounded-full bg-yellow-500/20 flex items-center justify-center mx-auto mb-6"><i data-lucide="clock" class="w-10 h-10 text-yellow-400"></i></div>' +
+        '<h2 class="text-2xl font-bold mb-2">Ujian Selesai!</h2>' +
+        '<p class="text-gray-400 mb-6">' + esc(EX.ujian.nama) + '</p>' +
+        '<div class="text-3xl font-extrabold text-yellow-400 mb-4">Nilai Sedang Diproses</div>' +
+        '<p class="text-sm text-gray-400 mb-2">Jawaban essay Anda sedang menunggu penilaian manual dari guru.</p>' +
+        '<div class="text-xs text-gray-500 mb-6 bg-white/5 inline-block px-4 py-2 rounded-lg">Jawaban Otomatis: Benar ' + d.benar + ' | Salah ' + d.salah + '</div><br>' +
+        '<button onclick="AU.out()" class="bp px-6 py-3 rounded-xl font-semibold mt-4">Kembali ke Dashboard</button>' +
+        '</div>';
+    } else {
+      // TAMPILAN JIKA SEMUA SUDAH DINILAI (ATAU TIDAK ADA ESSAY)
+      // Gunakan skor asli (d.nilai) dibagi skor maksimal (d.skor_max)
+      var sk = parseInt(d.nilai) || 0;
+      var skorMax = parseInt(d.skor_max) || sk; // Fallback jika skor_max tidak terkirim
+      var pct = parseInt(d.persentase) || 0;
+      
+      // Tentukan warna dan grade berdasarkan persentase (untuk referensi)
+      var cl = pct >= 90 ? 'text-green-400' : pct >= 80 ? 'text-blue-400' : pct >= 70 ? 'text-yellow-400' : 'text-red-400';
+      var gr = pct >= 90 ? 'A' : pct >= 80 ? 'B' : pct >= 70 ? 'C' : 'D';
+      
+      if (eq) eq.innerHTML = '<div class="gs rounded-xl p-8 text-center asu">' +
+        '<div class="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6"><i data-lucide="check-circle" class="w-10 h-10 text-green-400"></i></div>' +
+        '<h2 class="text-2xl font-bold mb-2">Ujian Selesai!</h2>' +
+        '<p class="text-gray-400 mb-6">' + esc(EX.ujian.nama) + '</p>' +
+        '<div class="text-6xl font-extrabold ' + cl + ' mb-2">' + sk + '<span class="text-2xl text-gray-500"> / ' + skorMax + '</span></div>' +
+        '<div class="text-sm text-gray-400 mb-1">Grade: <span class="font-bold text-white">' + gr + '</span> (' + pct + '%)</div>' +
+        '<div class="text-xs text-gray-500 mb-6">Benar: ' + d.benar + ' | Salah: ' + d.salah + '</div>' +
+        '<button onclick="AU.out()" class="bp px-6 py-3 rounded-xl font-semibold">Kembali ke Dashboard</button>' +
+        '</div>';
+    }
+    ic(); // Render ulang ikon lucide
+  }).catch(function(err) {
+    if (eq) eq.innerHTML = '<div class="gs rounded-xl p-8 text-center"><p class="text-red-400 text-lg mb-4">Gagal: ' + esc(err) + '</p><button onclick="AU.out()" class="bp px-6 py-3 rounded-xl font-semibold">Kembali</button></div>';
+  });
 };
 var _blurCooldown = false;
 function sAC() {
